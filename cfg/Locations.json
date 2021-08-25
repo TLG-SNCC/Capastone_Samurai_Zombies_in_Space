@@ -16,24 +16,24 @@
   "Central Hub": {
     "East": "Bar",
     "West": "Medical Bay",
-    "item": ["Zombie Armor", "Zombie Katana"],
+    "Item": ["Zombie Armor", "Zombie Katana"],
     "Description": "As soon as you step inside you start to slowly drift upwards. You look around and see floating tables and crates. The generator must be broken so this room isn't getting any gravity. To the east you find a bright flickering neon light that reads \"Jill's Bar\"."
   },
   "Bar": {
     "West": "Central Hub",
     "NPC": "Bartender",
-    "item": ["Swiss Army Knife"],
+    "Item": ["Swiss Army Knife"],
     "Description": "There's space music playing on the jukebox. The tables near the exit are stacked on each other, some broken cleanly in half. Grabbing a drink from the bar doesn't sound like a bad idea."
   },
   "Medical Bay": {
     "East": "Central Hub",
     "NPC": "Injured Visitor",
-    "item": ["Health Kit", "Lever"],
+    "Item": ["Health Kit", "Lever"],
     "Description": "The smell of iron fills the room. The walls are painted red and there's a few bodies laying on the ground. There are medical supply boxes on the ground and some on the shelves, all empty. There may be more to find towards the back of the room."
   },
   "Escape Shuttle": {
     "East": "Landing Dock",
-    "item": ["Oxygen Tank"],
+    "Item": ["Oxygen Tank"],
     "Description": "The area is littered with cargo boxes, rats, and wires hanging loosely from the walls."
   }
 }
