@@ -68,11 +68,17 @@ public class Main extends Application {
             }
 
             if (command.equals("go north")){
-                currentLocation = spaceship.get(currentLocation).get("north");
+                if (spaceship.containsKey("north"))
+                    currentLocation = spaceship.get(currentLocation).get("north");
+                else
+                    System.out.println("Cannot go north");
             }
 
             if (command.equals("go south")){
-                currentLocation = spaceship.get(currentLocation).get("south");
+                if (spaceship.containsKey("south"))
+                    currentLocation = spaceship.get(currentLocation).get("south");
+                else
+                    System.out.println("Cannot go south");
             }
 
         }
