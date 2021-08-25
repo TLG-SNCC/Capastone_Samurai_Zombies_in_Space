@@ -4,12 +4,12 @@
     "West": "Escape Shuttle",
     "East": "Repair Workshop",
     "South": "Ship",
-    "NPC": "Disarmed Guard",
+    "NPC": "Guard",
     "Description": "You're located in the Landing Dock. To the west you notice an escape dock littered with debris. To the East you find a beat up repair shop, advertising \"Their low prices are to die for\". South of you, you'll find your ship. There's some smoke coming out of the FTL engine. You curse the stupid space debris for damaging your craft while you search for a repair."
   },
   "Repair Workshop": {
     "West": "Landing Dock",
-    "NPC": "Scared Engineer",
+    "NPC": "Engineer",
     "Item": ["Wizzlewhat", "Space Wrench"],
     "Description": "Inside the shop you see repair parts knocked over on the ground. There's blood smeared behind a counter (someone must have had a bad accident). You take a step forward and hear the sound of a tool hit the ground. You quickly glance over and see a pair of eyes behind a stack of RAD boosters."
   },
@@ -17,7 +17,7 @@
     "East": "Bar",
     "West": "Medical Bay",
     "Item": ["Zombie Armor", "Zombie Katana"],
-    "Description": "As soon as you step inside you start to slowly drift upwards. You look around and see floating tables and crates. The generator must be broken so this room isn't getting any gravity. To the east you find a bright flickering neon light that reads \"Jill's Bar\"."
+    "Description": "As soon as you step inside you start to slowly drift upwards. You look around and see floating tables and crates. The generator must be broken so this room isn't getting any gravity. To the east you find a bright flickering neon light that reads \"Jill's Cantina\"."
   },
   "Bar": {
     "West": "Central Hub",
@@ -27,7 +27,7 @@
   },
   "Medical Bay": {
     "East": "Central Hub",
-    "NPC": "Injured Visitor",
+    "NPC": "Visitor",
     "Item": ["Health Kit", "Lever"],
     "Description": "The smell of iron fills the room. The walls are painted red and there's a few bodies laying on the ground. There are medical supply boxes on the ground and some on the shelves, all empty. There may be more to find towards the back of the room."
   },
