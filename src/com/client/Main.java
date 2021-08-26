@@ -1,4 +1,4 @@
-package sample;
+package com.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import java.util.Scanner;
 
@@ -15,7 +14,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("introScreen.fxml"));
         primaryStage.setTitle("Samurai Zombies in Space");
         primaryStage.setScene(new Scene(root, 800, 775));
         primaryStage.show();
@@ -24,7 +23,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-//        launch(args);
+        launch(args);
 
         // Instantiate Scanner class to get user input
         Scanner scanner = new Scanner(System.in);
