@@ -7,19 +7,17 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
-
 import java.util.Scanner;
 
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("introScreen.fxml"));
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("../resources/introScreen.fxml"));
         primaryStage.setTitle("Samurai Zombies in Space");
-        primaryStage.setScene(new Scene(root, 800, 775));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
-
 
 
     public static void main(String[] args) {
@@ -61,19 +59,19 @@ public class Main extends Application {
             command = scanner.nextLine();
             System.out.println("Command is: " + command);
 
-            if (command.equals("q")){
+            if (command.equals("q")) {
                 game = false;
                 System.out.println("Now leaving the game");
             }
 
-            if (command.equals("go north")){
+            if (command.equals("go north")) {
                 if (spaceship.containsKey("north"))
                     currentLocation = spaceship.get(currentLocation).get("north");
                 else
                     System.out.println("Cannot go north");
             }
 
-            if (command.equals("go south")){
+            if (command.equals("go south")) {
                 if (spaceship.containsKey("south"))
                     currentLocation = spaceship.get(currentLocation).get("south");
                 else

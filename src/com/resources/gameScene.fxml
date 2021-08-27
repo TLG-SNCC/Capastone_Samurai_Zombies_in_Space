@@ -34,34 +34,34 @@
 
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controller.FXMLDocumentController">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <children>
-            <SplitPane dividerPositions="0.5, 0.5" layoutX="-1.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="640.0">
-              <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                     <children>
-                        <TextArea editable="false" prefHeight="200.0" prefWidth="638.0" promptText="Story stuff goes here">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0"
+            prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controller.GameSceneController">
+    <children>
+        <SplitPane dividerPositions="0.7964824120603015" orientation="VERTICAL" prefHeight="775.0" prefWidth="800.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="775.0" prefWidth="800.0">
+                    <children>
+                        <TextArea fx:id="storyTextArea" editable="false" layoutY="-1.0" prefHeight="775.0"
+                                  prefWidth="800.0" wrapText="true">
+                            <font>
+                                <Font size="16.0"/>
+                            </font>
                         </TextArea>
-                     </children>
-                  </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-                  <TextArea prefHeight="200.0" prefWidth="638.0" promptText="Commands Go Here" style="-fx-background-color: Black;">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </TextArea>
-              </items>
-            </SplitPane>
-      </children>
-    </AnchorPane>
-  </children>
-</VBox>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="775.0" prefWidth="800.0"/>
+                <TextField fx:id="inputTextField" prefHeight="775.0" prefWidth="800.0"
+                           promptText="Commands Go Here" style="-fx-background-color: Black;"
+                           onAction="#handleTextFieldInput">
+                    <font>
+                        <Font size="16.0"/>
+                    </font>
+                </TextField>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>

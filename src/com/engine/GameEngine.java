@@ -43,7 +43,7 @@ public class GameEngine {
             }
 
             // perform actions
-            switch(command[0]) {
+            switch (command[0]) {
                 case "look":
                     System.out.println("You're looking.");
                     break;
