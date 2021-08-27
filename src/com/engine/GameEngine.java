@@ -1,21 +1,25 @@
 package com.engine;
 
 
+import com.character.Player;
+import com.item.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameEngine {
     boolean winStatus = false;
     boolean loseStatus = false;
     String currentLocation = "Loading Dock";
-    //Player player;
+    Player player;
     //NPC npcs;
     //NPC zombies; ?? later for tracking how many are alive and where?
-    //Location locations;
-    //Item items;
+    List<Item> catalog = new ArrayList<>();
 
     public GameEngine() {
         // Set up Player
-        // player = new Player;
+        player = Player.PLAYER;
         // Get NPCs
         // npcs = new NPC();
 
@@ -23,7 +27,8 @@ public class GameEngine {
         // locations = new Location();
 
         // Get Items
-        // items = new Item();
+        catalog.add(new Item("spacewrench", "engineering"));
+        catalog.add(new Item("lever", "shuttlebay"));
     }
 
     public void runGameLoop() {
@@ -33,6 +38,7 @@ public class GameEngine {
             // get user input
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
+
 
             // parse input 
             String[] command = new String[2];
@@ -51,10 +57,13 @@ public class GameEngine {
                     System.out.println("You're hitting.");
                     break;
                 case "go":
-                    System.out.println("You're going.");
+                    //check that this room is accessible from current room
+                    player.setLocation(command[1]);
+                    System.out.println("You're in the " + command[1]);
                     break;
                 case "get":
-                    System.out.println("You're getting.");
+                    Item newItem = new Item(command[1], player.getLocation());
+                    player.addToInventory(newItem);
                     break;
                 case "talk":
                     System.out.println("you're talking.");
@@ -75,6 +84,13 @@ public class GameEngine {
                 System.out.println("You have lost.");
                 break;
             }
+
+            System.out.print("Your inventory contains: ");
+            for (Item item : player.getInventory()) {
+                System.out.print(item.getName() + " ");
+            }
+            System.out.println("");
+
         }
     }
 

@@ -5,7 +5,7 @@ public class Item {
     private String name;
     private String location; // until location is a class?
 
-    Item (String name, String location) {
+    public Item (String name, String location) {
         this.name = name;
         this.location = location;
     }
