@@ -1,4 +1,4 @@
-package sample;
+package com.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,12 +9,13 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("../resources/introScreen.fxml"));
         primaryStage.setTitle("Samurai Zombies in Space");
-        primaryStage.setScene(new Scene(root, 800, 775));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
+
 
 
     public static void main(String[] args) {
