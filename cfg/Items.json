@@ -1,0 +1,26 @@
+{
+  "Wizzlewhat": {
+    "Description": "A wizzlewhat of course."
+},
+  "Space Wrench": {
+    "Description": "A wrench best used in space."
+  },
+  "Zombie Armor": {
+    "Description": "Looks to be in good shape, don't mind the blood."
+  },
+  "Zombie Katana": {
+    "Description": "Funny, you like samurai swords... I like baseball."
+  },
+  "Swiss Army Knife": {
+    "Description": "This has many uses but it can't fix my ship."
+  },
+  "Health Kit": {
+    "Description": "Quick patch. Restores a bit of HP."
+  },
+  "Lever": {
+    "Description": "The missing lever from the refueling station."
+  },
+  "Oxygen Tank": {
+    "Description": "Oxygen, dioxygen, diatomic oxygen."
+  }
+}
