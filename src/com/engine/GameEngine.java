@@ -2,20 +2,25 @@ package com.engine;
 
 
 import com.character.Player;
+import com.controller.GameSceneController;
 import com.item.Item;
+import javafx.scene.control.TextField;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Scanner;
 
 
-
 public class GameEngine {
+
     boolean winStatus = false;
     boolean loseStatus = false;
     String currentLocation = "landing dock";
     Player player;
+
+    // gets player status
+    public StringBuilder status = showStatus(currentLocation);
+    public StringBuilder gameBuilder;
+
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
     HashMap<String, String> catalog = new HashMap<>();
@@ -54,12 +59,22 @@ public class GameEngine {
         spaceship.put("hall", hall);
     }
 
+    public StringBuilder gameStart(TextField input) {
+        gameBuilder.append(input.getText());
+        while(input != null){
+            System.out.println(gameBuilder);
+        }
+        return gameBuilder;
+        //System.out.println(GameSceneController.inputTextFieldString());
+    }
+
     public void runGameLoop() {
 
         // Start loop
         while (!winStatus && !loseStatus) {
             //show status
-            showStatus(currentLocation);
+            //showStatus(currentLocation);
+            //GameSceneController.appendInputToTextarea(currentLocation);
 
             // get user input
             Scanner sc = new Scanner(System.in);
@@ -71,8 +86,7 @@ public class GameEngine {
                 if (command[0].equals("q")) {
                     System.out.println("Exiting game");
                     System.exit(0);
-                }
-                else
+                } else
                     System.out.println("Sorry, Dave. I can't do that.");
                 continue;
             }
@@ -89,28 +103,28 @@ public class GameEngine {
                     //check that this room is accessible from current room
                     player.setLocation(command[1]);
                     System.out.println("You're in the " + command[1]);
-                    if (command[1].equals("north")){
+                    if (command[1].equals("north")) {
                         if (spaceship.get(currentLocation).containsKey("north"))
                             currentLocation = spaceship.get(currentLocation).get("north");
                         else
                             System.out.println("Cannot go north");
                     }
 
-                    if (command[1].equals("south")){
+                    if (command[1].equals("south")) {
                         if (spaceship.get(currentLocation).containsKey("south"))
                             currentLocation = spaceship.get(currentLocation).get("south");
                         else
                             System.out.println("Cannot go south");
                     }
 
-                    if (command[1].equals("east")){
+                    if (command[1].equals("east")) {
                         if (spaceship.get(currentLocation).containsKey("east"))
                             currentLocation = spaceship.get(currentLocation).get("east");
                         else
                             System.out.println("Cannot go east");
                     }
 
-                    if (command[1].equals("west")){
+                    if (command[1].equals("west")) {
                         if (spaceship.get(currentLocation).containsKey("west"))
                             currentLocation = spaceship.get(currentLocation).get("west");
                         else
@@ -155,34 +169,38 @@ public class GameEngine {
     }
 
 
-    public static void showStatus(String location) {
-        System.out.println("You are currently in the " + location);
-        System.out.println();
-        System.out.println("Where do you want to go?");
-        System.out.println("Commands:");
-        System.out.println("go north");
-        System.out.println("go south");
-        System.out.println("go east");
-        System.out.println("go west");
-        System.out.println("q to quit");
-        System.out.println();
+    public StringBuilder showStatus(String location) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n You are currently in the ").append(location).append('\n').append("Where do you want to go?").append("\n Commands: \n Go North, South, East West.");
+        // System.out.println(builder);
+        return builder;
+//        System.out.println("You are currently in the " + location);
+//        System.out.println();
+//        System.out.println("Where do you want to go?");
+//        System.out.println("Commands:");
+//        System.out.println("go north");
+//        System.out.println("go south");
+//        System.out.println("go east");
+//        System.out.println("go west");
+//        System.out.println("q to quit");
+//        System.out.println();
     }
 
-    private void checkPlayerHealth() {
+    private static void checkPlayerHealth() {
         //if Player.getHealth() < 1 { loseStatus = true; }
     }
 
-    private void checkPuzzleComplete() {
+    private static void checkPuzzleComplete() {
         //if wizzlewhat and space wrench are in player inventory, winStatus = true
         //later, account for fueling time as well
     }
 
-    private String[] parser(String input) {
+    private static String[] parser(String input) {
         return input.toLowerCase().split("[\\s]+");
     }
 
-    public static void main(String[] args) {
-        GameEngine game = new GameEngine();
-        game.runGameLoop();
-    }
+//    public static void main(String[] args) {
+//        GameEngine game = new GameEngine();
+//        game.runGameLoop();
+//    }
 }
