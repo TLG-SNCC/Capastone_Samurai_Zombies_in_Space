@@ -4,30 +4,31 @@ package com.engine;
 import com.character.Player;
 import com.item.Item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Scanner;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import com.item.Weapon;
 
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 
 public class GameEngine {
     boolean winStatus = false;
     boolean loseStatus = false;
-    String currentLocation = "landing dock";
+    static String currentLocation = "Landing Dock";
     Player player;
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
     HashMap<String, String> catalog = new HashMap<>();
+    static JSONParser parser = new JSONParser();
 
-    // Setting up the different rooms in the spaceship
-    HashMap<String, HashMap<String, String>> spaceship = new HashMap<>();
-
-    //Create a landing dock room
-    HashMap<String, String> landingDock = new HashMap<>();
-
-    //Create a hall room
-    HashMap<String, String> hall = new HashMap<>();
+    //Create a bar room
+    HashMap<String, String> bar = new HashMap<>();
 
     public GameEngine() {
         // Set up Player
@@ -41,6 +42,8 @@ public class GameEngine {
         // Get Items
         catalog.put("spacewrench", "landing dock");
         catalog.put("lever", "hall");
+        catalog.put("katana", "bar");
+
 
 
         //Create a door to go north
@@ -49,9 +52,17 @@ public class GameEngine {
         //Create a door to go south
         hall.put("south", "landing dock");
 
+        //Create a room east of the hall leading to the bar
+        hall.put("east","bar");
+
+        //Create a room west of the bar leading to the hall
+        bar.put("west","hall");
+
         //Adding the two rooms to the spaceship object
         spaceship.put("landing dock", landingDock);
         spaceship.put("hall", hall);
+        spaceship.put("bar", bar);
+
     }
 
     public void runGameLoop() {
@@ -86,40 +97,15 @@ public class GameEngine {
                     System.out.println("You're hitting.");
                     break;
                 case "go":
+                    // Capitalize the directions so that it could read the JSON file
+                    String upper = command[1].substring(0,1).toUpperCase() + command[1].substring(1);
+                    headToNextRoom(upper);
                     //check that this room is accessible from current room
-                    player.setLocation(command[1]);
-                    System.out.println("You're in the " + command[1]);
-                    if (command[1].equals("north")){
-                        if (spaceship.get(currentLocation).containsKey("north"))
-                            currentLocation = spaceship.get(currentLocation).get("north");
-                        else
-                            System.out.println("Cannot go north");
-                    }
-
-                    if (command[1].equals("south")){
-                        if (spaceship.get(currentLocation).containsKey("south"))
-                            currentLocation = spaceship.get(currentLocation).get("south");
-                        else
-                            System.out.println("Cannot go south");
-                    }
-
-                    if (command[1].equals("east")){
-                        if (spaceship.get(currentLocation).containsKey("east"))
-                            currentLocation = spaceship.get(currentLocation).get("east");
-                        else
-                            System.out.println("Cannot go east");
-                    }
-
-                    if (command[1].equals("west")){
-                        if (spaceship.get(currentLocation).containsKey("west"))
-                            currentLocation = spaceship.get(currentLocation).get("west");
-                        else
-                            System.out.println("Cannot go west");
-                    }
+                    player.setLocation(currentLocation);
                     break;
                 case "get":
                     Item newItem = new Item(command[1], player.getLocation());
-                    if (catalog.containsKey(command[1]) && catalog.get(command[1]) == currentLocation) {
+                    if (catalog.containsKey(command[1]) && catalog.get(command[1]).equals(currentLocation)) {
                         player.addToInventory(newItem);
                     } else {
                         System.out.println("Sorry, Dave. I can't get that.");
@@ -159,11 +145,11 @@ public class GameEngine {
         System.out.println("You are currently in the " + location);
         System.out.println();
         System.out.println("Where do you want to go?");
-        System.out.println("Commands:");
-        System.out.println("go north");
-        System.out.println("go south");
-        System.out.println("go east");
-        System.out.println("go west");
+        System.out.println("Commands: go north, south, east, west");
+//        System.out.println("go north");
+//        System.out.println("go south");
+//        System.out.println("go east");
+//        System.out.println("go west");
         System.out.println("q to quit");
         System.out.println();
     }
@@ -180,6 +166,30 @@ public class GameEngine {
     private String[] parser(String input) {
         return input.toLowerCase().split("[\\s]+");
     }
+
+    public static void headToNextRoom(String direction) {
+        try {
+            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+//            System.out.println(locations);
+            JSONObject current = (JSONObject) locations.get(currentLocation);
+//            System.out.println(medBay);
+            String next = (String) current.get(direction);
+            if (current.containsKey(direction)) {
+                System.out.println("Going " + direction);
+                currentLocation = next;
+            }
+            else
+                System.out.println("Can't go that way");
+//            System.out.println(east);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         GameEngine game = new GameEngine();

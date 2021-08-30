@@ -8,7 +8,7 @@ public class Item {
     private String location; // until location is a class?
     private String description;
 
-    public Item (String name, String location) {
+    public Item(String name, String location) {
         this.name = name;
         this.location = location;
     }
@@ -36,4 +36,5 @@ public class Item {
     private void setName(String name) {
         this.name = name;
     }
+
 }
