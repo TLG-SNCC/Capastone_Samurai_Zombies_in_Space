@@ -3,6 +3,7 @@ package com.engine;
 
 import com.character.Player;
 import com.item.Item;
+import com.item.Weapon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,9 @@ public class GameEngine {
     //Create a hall room
     HashMap<String, String> hall = new HashMap<>();
 
+    //Create a bar room
+    HashMap<String, String> bar = new HashMap<>();
+
     public GameEngine() {
         // Set up Player
         player = Player.PLAYER;
@@ -41,6 +45,7 @@ public class GameEngine {
         // Get Items
         catalog.put("spacewrench", "landing dock");
         catalog.put("lever", "hall");
+        catalog.put("katana", "bar");
 
 
         //Create a door to go north
@@ -49,9 +54,16 @@ public class GameEngine {
         //Create a door to go south
         hall.put("south", "landing dock");
 
+        //Create a room east of the hall leading to the bar
+        hall.put("east","bar");
+
+        //Create a room west of the bar leading to the hall
+        bar.put("west","hall");
+
         //Adding the two rooms to the spaceship object
         spaceship.put("landing dock", landingDock);
         spaceship.put("hall", hall);
+        spaceship.put("bar", bar);
     }
 
     public void runGameLoop() {
@@ -88,7 +100,7 @@ public class GameEngine {
                 case "go":
                     //check that this room is accessible from current room
                     player.setLocation(command[1]);
-                    System.out.println("You're in the " + command[1]);
+                    System.out.println("You move " + command[1]);
                     if (command[1].equals("north")){
                         if (spaceship.get(currentLocation).containsKey("north"))
                             currentLocation = spaceship.get(currentLocation).get("north");
@@ -119,7 +131,7 @@ public class GameEngine {
                     break;
                 case "get":
                     Item newItem = new Item(command[1], player.getLocation());
-                    if (catalog.containsKey(command[1]) && catalog.get(command[1]) == currentLocation) {
+                    if (catalog.containsKey(command[1]) && catalog.get(command[1]).equals(currentLocation)) {
                         player.addToInventory(newItem);
                     } else {
                         System.out.println("Sorry, Dave. I can't get that.");
@@ -159,11 +171,11 @@ public class GameEngine {
         System.out.println("You are currently in the " + location);
         System.out.println();
         System.out.println("Where do you want to go?");
-        System.out.println("Commands:");
-        System.out.println("go north");
-        System.out.println("go south");
-        System.out.println("go east");
-        System.out.println("go west");
+        System.out.println("Commands: go north, south, east, west");
+//        System.out.println("go north");
+//        System.out.println("go south");
+//        System.out.println("go east");
+//        System.out.println("go west");
         System.out.println("q to quit");
         System.out.println();
     }
