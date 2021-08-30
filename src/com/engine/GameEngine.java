@@ -3,10 +3,13 @@ package com.engine;
 
 import com.character.Player;
 import com.item.Item;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import com.item.Weapon;
+
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,6 +27,9 @@ public class GameEngine {
     HashMap<String, String> catalog = new HashMap<>();
     static JSONParser parser = new JSONParser();
 
+    //Create a bar room
+    HashMap<String, String> bar = new HashMap<>();
+
     public GameEngine() {
         // Set up Player
         player = Player.PLAYER;
@@ -36,6 +42,26 @@ public class GameEngine {
         // Get Items
         catalog.put("spacewrench", "landing dock");
         catalog.put("lever", "hall");
+        catalog.put("katana", "bar");
+
+
+
+        //Create a door to go north
+        landingDock.put("north", "hall");
+
+        //Create a door to go south
+        hall.put("south", "landing dock");
+
+        //Create a room east of the hall leading to the bar
+        hall.put("east","bar");
+
+        //Create a room west of the bar leading to the hall
+        bar.put("west","hall");
+
+        //Adding the two rooms to the spaceship object
+        spaceship.put("landing dock", landingDock);
+        spaceship.put("hall", hall);
+        spaceship.put("bar", bar);
 
     }
 
@@ -79,7 +105,7 @@ public class GameEngine {
                     break;
                 case "get":
                     Item newItem = new Item(command[1], player.getLocation());
-                    if (catalog.containsKey(command[1]) && catalog.get(command[1]) == currentLocation) {
+                    if (catalog.containsKey(command[1]) && catalog.get(command[1]).equals(currentLocation)) {
                         player.addToInventory(newItem);
                     } else {
                         System.out.println("Sorry, Dave. I can't get that.");
@@ -119,11 +145,11 @@ public class GameEngine {
         System.out.println("You are currently in the " + location);
         System.out.println();
         System.out.println("Where do you want to go?");
-        System.out.println("Commands:");
-        System.out.println("go north");
-        System.out.println("go south");
-        System.out.println("go east");
-        System.out.println("go west");
+        System.out.println("Commands: go north, south, east, west");
+//        System.out.println("go north");
+//        System.out.println("go south");
+//        System.out.println("go east");
+//        System.out.println("go west");
         System.out.println("q to quit");
         System.out.println();
     }
