@@ -16,6 +16,7 @@
   "Central Hub": {
     "East": "Bar",
     "West": "Medical Bay",
+    "South": "Landing Dock",
     "Item": ["Zombie Armor", "Zombie Katana"],
     "Description": "As soon as you step inside you start to slowly drift upwards. You look around and see floating tables and crates. The generator must be broken so this room isn't getting any gravity. To the east you find a bright flickering neon light that reads \"Jill's Cantina\"."
   },
