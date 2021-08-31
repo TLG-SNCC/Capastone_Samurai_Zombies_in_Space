@@ -2,15 +2,12 @@ package com.engine;
 
 
 import com.character.Player;
-import com.controller.GameSceneController;
 import com.item.Item;
 import javafx.scene.control.TextField;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import com.item.Weapon;
 
 
 import java.io.FileNotFoundException;
@@ -20,8 +17,6 @@ import java.util.*;
 
 public class GameEngine {
 
-    boolean winStatus = false;
-    boolean loseStatus = false;
     static String currentLocation = "Landing Dock";
     Player player;
 
@@ -53,55 +48,61 @@ public class GameEngine {
 
 
 
-        //Create a door to go north
-        landingDock.put("north", "hall");
-
-        //Create a door to go south
-        hall.put("south", "landing dock");
-
-        //Create a room east of the hall leading to the bar
-        hall.put("east","bar");
-
-        //Create a room west of the bar leading to the hall
-        bar.put("west","hall");
-
-        //Adding the two rooms to the spaceship object
-        spaceship.put("landing dock", landingDock);
-        spaceship.put("hall", hall);
-        spaceship.put("bar", bar);
+//        //Create a door to go north
+//        landingDock.put("north", "hall");
+//
+//        //Create a door to go south
+//        hall.put("south", "landing dock");
+//
+//        //Create a room east of the hall leading to the bar
+//        hall.put("east","bar");
+//
+//        //Create a room west of the bar leading to the hall
+//        bar.put("west","hall");
+//
+//        //Adding the two rooms to the spaceship object
+//        spaceship.put("landing dock", landingDock);
+//        spaceship.put("hall", hall);
+//        spaceship.put("bar", bar);
 
     }
 
-    public StringBuilder gameStart(TextField input) {
-        gameBuilder.append(input.getText());
-        while(input != null){
-            System.out.println(gameBuilder);
-        }
-        return gameBuilder;
-        //System.out.println(GameSceneController.inputTextFieldString());
-    }
+//    public StringBuilder gameStart(TextField input) {
+//        gameBuilder.append(input.getText());
+//        while(input != null){
+//            System.out.println(gameBuilder);
+//        }
+//        return gameBuilder;
+//        //System.out.println(GameSceneController.inputTextFieldString());
+//    }
 
-    public void runGameLoop() {
+    public StringBuilder runGameLoop(String input) {
+
 
         // Start loop
-        while (!winStatus && !loseStatus) {
+//        boolean winStatus = false;
+//        boolean loseStatus = false;
+       // while (!winStatus && !loseStatus) {
             //show status
-            showStatus(currentLocation);
+           // showStatus(currentLocation);
 
             // get user input
-            Scanner sc = new Scanner(System.in);
-            String input = sc.nextLine();
+//            Scanner sc = new Scanner(System.in);
+//            String input = sc.nextLine();
 
             String[] command;
             command = parser(input);
             if (command.length < 2) {
                 if (command[0].equals("q")) {
-                    System.out.println("Exiting game");
+                    gameBuilder.append("Exiting game");
+                    //System.out.println("Exiting game");
                     System.exit(0);
+                    //TODO: Exit game scene
                 }
                 else
-                    System.out.println("Sorry, Dave. I can't do that.");
-                continue;
+                    gameBuilder.append("Sorry, Dave. I can't do that.");
+                    //System.out.println("Sorry, Dave. I can't do that.");
+                //continue;
             }
 
             // perform actions
@@ -137,15 +138,15 @@ public class GameEngine {
             checkPuzzleComplete();
 
             //check for lose/win status
-            if (winStatus) {
-                System.out.println("You have won.");
-                break;
-            }
-
-            if (loseStatus) {
-                System.out.println("You have lost.");
-                break;
-            }
+//            if (winStatus) {
+//                System.out.println("You have won.");
+//                break;
+//            }
+//
+//            if (loseStatus) {
+//                System.out.println("You have lost.");
+//                break;
+//            }
 
             System.out.print("Your inventory contains: ");
             for (Item item : player.getInventory()) {
@@ -153,14 +154,15 @@ public class GameEngine {
             }
             System.out.println();
 
-        }
+        //}
+        return gameBuilder;
     }
 
 
     public StringBuilder showStatus(String location) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n You are currently in the ").append(location).append('\n').append("Where do you want to go?").append("\n Commands: \n Go North, South, East West.");
-        // System.out.println(builder);
+        System.out.println(builder);
         return builder;
 //        System.out.println("You are currently in the " + location);
 //        System.out.println();
@@ -187,15 +189,15 @@ public class GameEngine {
         return input.toLowerCase().split("[\\s]+");
     }
 
-    public static void headToNextRoom(String direction) {
+    private void headToNextRoom(String location) {
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
 //            System.out.println(locations);
             JSONObject current = (JSONObject) locations.get(currentLocation);
 //            System.out.println(medBay);
-            String next = (String) current.get(direction);
-            if (current.containsKey(direction)) {
-                System.out.println("Going " + direction);
+            String next = (String) current.get(location);
+            if (current.containsKey(location)) {
+                System.out.println("Going " + location);
                 currentLocation = next;
             }
             else
@@ -211,8 +213,8 @@ public class GameEngine {
     }
 
 
-    public static void main(String[] args) {
-        GameEngine game = new GameEngine();
-        game.runGameLoop();
-    }
+//    public static void main(String[] args) {
+//        GameEngine game = new GameEngine();
+//        game.runGameLoop();
+//    }
 }

@@ -34,6 +34,7 @@ public class GameSceneController implements Initializable {
 
     private void storyTextareaContainer() throws IOException {
         introStoryToTextarea();
+
     }
 
     /*
@@ -43,7 +44,9 @@ public class GameSceneController implements Initializable {
     public void handleTextFieldInput(ActionEvent event) {
         getInputTextField().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                storyTextArea.appendText(getInputTextField().getText() + '\n');
+                storyTextArea.appendText(inputTextFieldString());
+                storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
+
                 getInputTextField().clear();
             }
         });
@@ -73,11 +76,11 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    public String inputTextFieldString(){
+    public String inputTextFieldString() {
         return getInputTextField().getText();
     }
 
-    public void appendInputToTextarea(String strToDisplay){
+    public void appendInputToTextarea(String strToDisplay) {
         storyTextArea.appendText(strToDisplay + '\n');
     }
 
