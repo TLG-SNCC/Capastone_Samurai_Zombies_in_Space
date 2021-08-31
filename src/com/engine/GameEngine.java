@@ -117,6 +117,14 @@ public class GameEngine {
             case "talk":
                 gameBuilder.append("\n you're talking. \n");
                 break;
+            case "heal":
+                if (currentLocation.contains("Medical Bay")){
+                    System.out.println("before " + player.getHealth());
+                    player.setHealth(player.getHealth() + 5);
+                    System.out.println("after " + player.getHealth());
+                } else{
+                    System.out.println("Sorry, Dave. You must be in the Medical Bay to heal.");
+                }
         }
 
         //update win/lose status
