@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.engine.GameEngine;
+import com.item.Item;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,20 +49,27 @@ public class GameSceneController implements Initializable {
     public void handleTextFieldInput(ActionEvent event) {
         getInputTextField().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                storyTextArea.appendText(" > " + inputTextFieldString());
+                storyTextArea.appendText(" > " + inputTextFieldString() + "\n");
                 storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
                 getInputTextField().clear();
-                //TODO: dynamically set inventory
-                //inventory.setText("Space Wrench");
 
+                //TODO: dynamically set inventory
+                getPlayerInventory();
             }
         });
     }
 
-    private void populateInventoryTextArea() {
-
+    private void getPlayerInventory() {
+        StringBuilder playerInventory = new StringBuilder();
+        if (gameEngine.inventory != null) {
+            for (Item item : gameEngine.inventory) {
+                playerInventory.append(item.getName()).append("\n");
+                inventory.appendText(String.valueOf(playerInventory));
+            }
+            // need to clear the old list so we dont duplicate past items when getting a new one
+            gameEngine.inventory.clear();
+        }
     }
-
     /*
      * initialized at start of game.
      * reads main story txt file and sends add it to the textarea

@@ -12,13 +12,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 public class GameEngine {
 
     static String currentLocation = "Landing Dock";
     static Player player;
     public StringBuilder status = showStatus(currentLocation);
-    public StringBuilder inventory;
+    public List<Item> inventory = Player.PLAYER.getInventory();
 
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
@@ -58,8 +59,6 @@ public class GameEngine {
 
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = new StringBuilder();
-
-
         // Start loop
 //        boolean winStatus = false;
 //        boolean loseStatus = false;
@@ -73,7 +72,7 @@ public class GameEngine {
                 System.exit(0);
                 //TODO: Exit game scene without closing whole game
             }
-            if (command[0].equals("look")){
+            if (command[0].equals("look")) {
                 examineRoom();
             } else
                 gameBuilder.append("Sorry, Dave. I can't do that.");
@@ -146,10 +145,8 @@ public class GameEngine {
 
         gameBuilder.append("\n Your inventory contains:\n");
         for (Item item : player.getInventory()) {
-            gameBuilder.append(item.getName()).append("; ");
+            gameBuilder.append(item.getName());
         }
-        //gameBuilder.append(showStatus(currentLocation));
-        //}
         return gameBuilder.append(showStatus(currentLocation));
     }
 
@@ -187,13 +184,10 @@ public class GameEngine {
     }
 
     private String[] parser(String input) {
-//        String[] stringArr = input.toLowerCase().split("[\\s]+");
-//        for (int i = 0; i < stringArr.length; i++)
-//            stringArr[i] = stringArr[i].substring(0,1).toLowerCase() + stringArr[i].substring(1);
         return input.toLowerCase().split("[\\s]+");
     }
 
-    private String examineRoom(){
+    private String examineRoom() {
         String description = "";
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
@@ -211,13 +205,13 @@ public class GameEngine {
         }
         return description + "\n";
     }
+
     private String headToNextRoom(String direction) {
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
             JSONObject current = (JSONObject) locations.get(currentLocation);
             String next = (String) current.get(direction);
             if (current.containsKey(direction)) {
-                //gameBuilder.append(" \n Going ").append(direction);
                 currentLocation = next;
                 return "You moved " + direction;
             }
