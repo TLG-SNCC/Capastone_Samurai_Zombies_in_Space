@@ -36,15 +36,28 @@ public class GameEngine {
         // Get Locations
         // locations = new Location();
 
-        // Get Items
-        catalog.put("spacewrench", "landing dock");
-        catalog.put("lever", "hall");
-        catalog.put("katana", "bar");
+
+        // Get Items into Catalog
+        catalog = Item.readAll();
+
+        //Create a door to go north
+        //landingDock.put("north", "hall");
+
+        //Create a door to go south
+        //hall.put("south", "landing dock");
+
+        //Create a room east of the hall leading to the bar
+        //hall.put("east","bar");
+
+        //Create a room west of the bar leading to the hall
+        bar.put("west","hall");
+
 
     }
 
     public StringBuilder runGameLoop(String input) {
-        StringBuilder gameBuilder = showStatus(currentLocation);
+        StringBuilder gameBuilder = new StringBuilder();
+
 
         // Start loop
 //        boolean winStatus = false;
@@ -71,11 +84,14 @@ public class GameEngine {
             //continue;
         }
 
-        // perform actions
+            // perform actions
         switch (command[0]) {
             case "look":
-                gameBuilder.append("You're looking.");
+                System.out.println(command[1]);
+                String response = getLookResult(command[1].strip().toLowerCase());
+                System.out.println(response);
                 break;
+
             case "hit":
                 System.out.println("You're hitting.");
                 break;
@@ -111,13 +127,27 @@ public class GameEngine {
 //                break;
 //            }
 
-        gameBuilder.append("Your inventory contains: ");
+        gameBuilder.append("\n Your inventory contains:\n");
         for (Item item : player.getInventory()) {
             gameBuilder.append(item.getName()).append("; ");
         }
-
+        gameBuilder.append(showStatus(currentLocation));
         //}
         return gameBuilder;
+    }
+
+    private String getLookResult(String objectToFind) {
+        String object = objectToFind.strip().toLowerCase();
+        String response = "";
+        if (object.equals("around")) {
+            response = "Don't look too hard now.";
+        } else if (catalog.containsKey(object)) {
+            response = catalog.get(object);
+        } else {
+            System.out.println(catalog);
+            response = "You don't see a " + object + ".";
+        }
+        return response;
     }
 
 
@@ -127,7 +157,6 @@ public class GameEngine {
                 .append(location).append("\n Where do you want to go?")
                 .append("\n Commands: \n Go North, \nGo South, \nGo East, \nGo West, \n")
                 .append("q to quit\n");
-        //System.out.println(builder);
         return builder;
     }
 
@@ -163,6 +192,8 @@ public class GameEngine {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("Can't go that way");
         }
     }
 

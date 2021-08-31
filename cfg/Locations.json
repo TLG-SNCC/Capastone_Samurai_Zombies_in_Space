@@ -36,5 +36,9 @@
     "East": "Landing Dock",
     "Item": ["Oxygen Tank"],
     "Description": "The area is littered with cargo boxes, rats, and wires hanging loosely from the walls."
+  },
+  "Ship": {
+    "North": "Landing Dock",
+    "Description": "I'm on a boat"
   }
 }
