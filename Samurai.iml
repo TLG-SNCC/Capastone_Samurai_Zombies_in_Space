@@ -11,11 +11,12 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/json-simple-1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../Program Files/Java/json-simple-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="json-simple-1.1" level="project" />
   </component>
 </module>

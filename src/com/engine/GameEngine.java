@@ -3,6 +3,7 @@ package com.engine;
 
 import com.character.Player;
 import com.item.Item;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,6 +17,7 @@ public class GameEngine {
 
     static String currentLocation = "Landing Dock";
     static Player player;
+    public StringBuilder status = showStatus(currentLocation);
 
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
@@ -39,7 +41,7 @@ public class GameEngine {
         catalog.put("lever", "hall");
         catalog.put("katana", "bar");
 
-
+    }
 
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = showStatus(currentLocation);
@@ -124,7 +126,7 @@ public class GameEngine {
         builder.append("\n You are currently in the ")
                 .append(location).append("\n Where do you want to go?")
                 .append("\n Commands: \n Go North, \nGo South, \nGo East, \nGo West, \n")
-                .append("q to quit");
+                .append("q to quit\n");
         //System.out.println(builder);
         return builder;
     }
