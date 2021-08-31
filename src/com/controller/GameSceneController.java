@@ -44,8 +44,8 @@ public class GameSceneController implements Initializable {
     public void handleTextFieldInput(ActionEvent event) {
         getInputTextField().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                storyTextArea.appendText(inputTextFieldString());
-                storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
+                storyTextArea.setText(inputTextFieldString());
+                storyTextArea.setText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
                 getInputTextField().clear();
 
             }

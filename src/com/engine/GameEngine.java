@@ -7,6 +7,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import com.item.Weapon;
+
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -73,7 +75,7 @@ public class GameEngine {
         String[] command;
         command = parser(input);
         if (command.length < 2) {
-            if (command[0].equals("Q")) {
+            if (command[0].equals("q")) {
                 gameBuilder.append("Exiting game");
                 //System.out.println("Exiting game");
                 System.exit(0);
@@ -95,12 +97,12 @@ public class GameEngine {
             case "hit":
                 System.out.println("You're hitting.");
                 break;
-            case "Go":
+            case "go":
                 headToNextRoom(command[1]);
                 //check that this room is accessible from current room
                 player.setLocation(currentLocation);
                 break;
-            case "Get":
+            case "get":
                 if (command.length == 3) {
                     pickUpItem(command[1] + " " + command[2]);
                     break;
@@ -115,6 +117,13 @@ public class GameEngine {
             case "talk":
                 gameBuilder.append("\n you're talking. \n");
                 break;
+            case "heal":
+                if (currentLocation.contains("Medical Bay")){
+                    player.setHealth(player.getHealth() + 5);
+                    gameBuilder.append("\nYour current health is: " + player.getHealth());
+                } else {
+                    gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
+                }
         }
 
         //update win/lose status
@@ -172,7 +181,7 @@ public class GameEngine {
     private String[] parser(String input) {
         String[] stringArr = input.toLowerCase().split("[\\s]+");
         for (int i = 0; i < stringArr.length; i++)
-            stringArr[i] = stringArr[i].substring(0,1).toUpperCase() + stringArr[i].substring(1);
+            stringArr[i] = stringArr[i].substring(0,1).toLowerCase() + stringArr[i].substring(1);
         return stringArr;
     }
 
