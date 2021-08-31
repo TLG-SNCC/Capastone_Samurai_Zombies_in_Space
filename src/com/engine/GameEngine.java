@@ -7,8 +7,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import com.item.Weapon;
-
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,6 +18,7 @@ public class GameEngine {
     static String currentLocation = "Landing Dock";
     static Player player;
     public StringBuilder status = showStatus(currentLocation);
+    public StringBuilder inventory;
 
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
@@ -52,7 +51,7 @@ public class GameEngine {
         //hall.put("east","bar");
 
         //Create a room west of the bar leading to the hall
-        bar.put("west","hall");
+        bar.put("west", "hall");
 
 
     }
@@ -60,35 +59,26 @@ public class GameEngine {
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = new StringBuilder();
 
-
         // Start loop
 //        boolean winStatus = false;
 //        boolean loseStatus = false;
         // while (!winStatus && !loseStatus) {
-        //show status
-//            showStatus(currentLocation);
-
-        // get user input
-//            Scanner sc = new Scanner(System.in);
-//            String input = sc.nextLine();
 
         String[] command;
         command = parser(input);
         if (command.length < 2) {
             if (command[0].equals("q")) {
                 gameBuilder.append("Exiting game");
-                //System.out.println("Exiting game");
                 System.exit(0);
                 //TODO: Exit game scene without closing whole game
             } else
                 gameBuilder.append("Sorry, Dave. I can't do that.");
-            //System.out.println("Sorry, Dave. I can't do that.");
             //continue;
         }
 
-            // perform actions
+        // perform actions
         switch (command[0]) {
-            case "Look":
+            case "look":
                 System.out.println(command[1]);
                 String response = getLookResult(command[1].strip().toLowerCase());
                 gameBuilder.append(response);
@@ -119,9 +109,9 @@ public class GameEngine {
                 gameBuilder.append("\n you're talking. \n");
                 break;
             case "heal":
-                if (currentLocation.contains("Medical Bay")){
+                if (currentLocation.contains("Medical Bay")) {
                     player.setHealth(player.getHealth() + 5);
-                    gameBuilder.append("\nYour current health is: " + player.getHealth());
+                    gameBuilder.append("\nYour current health is: ").append(player.getHealth());
                 } else {
                     gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
                 }
@@ -137,13 +127,14 @@ public class GameEngine {
 //                break;
 //            }
 
-        gameBuilder.append("\n Your inventory contains:\n");
+        //gameBuilder.append("\n Your inventory contains:\n");
         for (Item item : player.getInventory()) {
-            gameBuilder.append(item.getName()).append("; ");
+            inventory.append(item.getName()).append("; ");
+            //gameBuilder.append(item.getName()).append("; ");
         }
-        gameBuilder.append(showStatus(currentLocation));
+        //gameBuilder.append(showStatus(currentLocation));
         //}
-        return gameBuilder;
+        return gameBuilder.append(showStatus(currentLocation));
     }
 
     private String getLookResult(String objectToFind) {
@@ -182,7 +173,7 @@ public class GameEngine {
     private String[] parser(String input) {
         String[] stringArr = input.toLowerCase().split("[\\s]+");
         for (int i = 0; i < stringArr.length; i++)
-            stringArr[i] = stringArr[i].substring(0,1).toLowerCase() + stringArr[i].substring(1);
+            stringArr[i] = stringArr[i].substring(0, 1).toLowerCase() + stringArr[i].substring(1);
         return stringArr;
     }
 
@@ -217,9 +208,9 @@ public class GameEngine {
                 System.out.println("Placed " + thing + " in your inventory");
                 Item itemToGet = new Item(thing, currentLocation);
                 player.addToInventory(itemToGet);
+            } else {
+                System.out.println(thing + " is already in your inventory");
             }
-                    else
-                        System.out.println(thing + " is already in your inventory");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

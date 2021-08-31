@@ -21,9 +21,13 @@ public class GameSceneController implements Initializable {
     private TextArea storyTextArea;
 
     @FXML
+    private TextArea inventory;
+
+    @FXML
     private TextField inputTextField;
 
-    GameEngine gameEngine = new GameEngine();
+
+    private final GameEngine gameEngine = new GameEngine();
 
     public GameSceneController() {
     }
@@ -44,12 +48,18 @@ public class GameSceneController implements Initializable {
     public void handleTextFieldInput(ActionEvent event) {
         getInputTextField().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                storyTextArea.setText(inputTextFieldString());
-                storyTextArea.setText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
+                storyTextArea.appendText(" > " + inputTextFieldString());
+                storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
                 getInputTextField().clear();
+                //TODO: dynamically set inventory
+                //inventory.setText("Space Wrench");
 
             }
         });
+    }
+
+    private void populateInventoryTextArea() {
+
     }
 
     /*
@@ -65,22 +75,23 @@ public class GameSceneController implements Initializable {
         }
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             introStoryToTextarea();
-            appendInputToTextarea(String.valueOf(gameEngine.status));
+            appendInputToStoryTextarea(String.valueOf(gameEngine.status));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public String inputTextFieldString() {
+    private String inputTextFieldString() {
         return getInputTextField().getText();
     }
 
-    public void appendInputToTextarea(String strToDisplay) {
+    private void appendInputToStoryTextarea(String strToDisplay) {
         storyTextArea.appendText(strToDisplay + '\n');
     }
 

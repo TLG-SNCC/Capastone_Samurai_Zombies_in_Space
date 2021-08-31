@@ -1,67 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
-  All rights reserved. Use is subject to license terms.
-
-  This file is available and licensed under the following license:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  - Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the distribution.
-  - Neither the name of Oracle Corporation nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0"
-            prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.controller.GameSceneController">
-    <children>
-        <SplitPane dividerPositions="0.7964824120603015" orientation="VERTICAL" prefHeight="775.0" prefWidth="800.0">
-            <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="775.0" prefWidth="800.0">
-                    <children >
-                        <TextArea fx:id="storyTextArea" style="-fx-control-inner-background: Black; -fx-text-fill: green" editable="false" layoutY="-1.0" prefHeight="775.0"
-                                  prefWidth="800.0" wrapText="true">
-                            <font>
-                                <Font size="16.0"/>
-                            </font>
-                        </TextArea>
-                    </children>
-                </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="775.0" prefWidth="800.0"/>
-                <TextField fx:id="inputTextField" prefHeight="775.0" prefWidth="800.0"
-                           promptText="Commands Go Here" style="-fx-background-color: Black; -fx-text-fill: green"
-                           onAction="#handleTextFieldInput">
-                    <font>
-                        <Font size="16.0"/>
-                    </font>
-                </TextField>
-            </items>
-        </SplitPane>
-    </children>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controller.GameSceneController">
+   <children>
+      <SplitPane dividerPositions="0.8357050452781372" orientation="VERTICAL" prefHeight="775.0" prefWidth="800.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <SplitPane dividerPositions="0.7977386934673367" prefHeight="643.0" prefWidth="798.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: black;">
+                           <children>
+                              <TextArea fx:id="storyTextArea" editable="false" prefHeight="641.0" prefWidth="632.0" scrollTop="100.0" style="-fx-control-inner-background: black; -fx-text-fill: green;" wrapText="true">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </TextArea>
+                              <ScrollBar fx:id="scrollbar" layoutX="608.0" max="10000.0" orientation="VERTICAL" prefHeight="641.0" prefWidth="26.0" />
+                           </children></AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: black;">
+                           <children>
+                              <TextArea fx:id="inventory" editable="false" layoutY="58.0" prefHeight="583.0" prefWidth="158.0" style="-fx-control-inner-background: black; -fx-text-fill: green;">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </TextArea>
+                              <Label alignment="CENTER" contentDisplay="TEXT_ONLY" prefHeight="53.0" prefWidth="158.0" text="Inventory" textAlignment="CENTER" textFill="#26b509">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="419.0" prefWidth="798.0">
+               <children>
+                  <TextField fx:id="inputTextField" onAction="#handleTextFieldInput" prefHeight="124.0" prefWidth="800.0" promptText="Enter Command" style="-fx-background-color: black; -fx-text-fill: green;">
+                     <font>
+                        <Font size="16.0" />
+                     </font></TextField>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
 </AnchorPane>
