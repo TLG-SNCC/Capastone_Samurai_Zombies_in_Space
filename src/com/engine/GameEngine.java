@@ -3,6 +3,7 @@ package com.engine;
 
 import com.character.Player;
 import com.item.Item;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -15,13 +16,8 @@ import java.util.HashMap;
 public class GameEngine {
 
     static String currentLocation = "Landing Dock";
-    Player player;
-
-    // gets player status
+    static Player player;
     public StringBuilder status = showStatus(currentLocation);
-
-
-//    public StringBuilder gameBuilder;
 
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
@@ -45,34 +41,7 @@ public class GameEngine {
         catalog.put("lever", "hall");
         catalog.put("katana", "bar");
 
-
-//        //Create a door to go north
-//        landingDock.put("north", "hall");
-//
-//        //Create a door to go south
-//        hall.put("south", "landing dock");
-//
-//        //Create a room east of the hall leading to the bar
-//        hall.put("east","bar");
-//
-//        //Create a room west of the bar leading to the hall
-//        bar.put("west","hall");
-//
-//        //Adding the two rooms to the spaceship object
-//        spaceship.put("landing dock", landingDock);
-//        spaceship.put("hall", hall);
-//        spaceship.put("bar", bar);
-
     }
-
-//    public StringBuilder gameStart(TextField input) {
-//        gameBuilder.append(input.getText());
-//        while(input != null){
-//            System.out.println(gameBuilder);
-//        }
-//        return gameBuilder;
-//        //System.out.println(GameSceneController.inputTextFieldString());
-//    }
 
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = showStatus(currentLocation);
@@ -91,7 +60,7 @@ public class GameEngine {
         String[] command;
         command = parser(input);
         if (command.length < 2) {
-            if (command[0].equals("q")) {
+            if (command[0].equals("Q")) {
                 gameBuilder.append("Exiting game");
                 //System.out.println("Exiting game");
                 System.exit(0);
@@ -106,30 +75,29 @@ public class GameEngine {
         switch (command[0]) {
             case "look":
                 gameBuilder.append("You're looking.");
-                //System.out.println("You're looking.");
                 break;
             case "hit":
                 System.out.println("You're hitting.");
                 break;
-            case "go":
-                // Capitalize the directions so that it could read the JSON file
-                String upper = command[1].substring(0, 1).toUpperCase() + command[1].substring(1);
-                headToNextRoom(upper);
+            case "Go":
+                headToNextRoom(command[1]);
                 //check that this room is accessible from current room
                 player.setLocation(currentLocation);
                 break;
-            case "get":
-                Item newItem = new Item(command[1], player.getLocation());
-                if (catalog.containsKey(command[1]) && catalog.get(command[1]).equals(currentLocation)) {
-                    player.addToInventory(newItem);
+            case "Get":
+                if (command.length == 3) {
+                    pickUpItem(command[1] + " " + command[2]);
+                    break;
+                }
+                if (command.length == 2) {
+                    pickUpItem(command[1]);
+                    break;
                 } else {
                     gameBuilder.append("\n \"Sorry, Dave. I can't get that.\n");
-                    //System.out.println("Sorry, Dave. I can't get that.");
                 }
                 break;
             case "talk":
                 gameBuilder.append("\n you're talking. \n");
-                //System.out.println("you're talking.");
                 break;
         }
 
@@ -142,19 +110,11 @@ public class GameEngine {
 //                System.out.println("You have won.");
 //                break;
 //            }
-//
-//            if (loseStatus) {
-//                System.out.println("You have lost.");
-//                break;
-//            }
 
         gameBuilder.append("Your inventory contains: ");
-        //System.out.print("Your inventory contains: ");
         for (Item item : player.getInventory()) {
-            gameBuilder.append(item.getName()).append(" ");
-            //System.out.print(item.getName() + " ");
+            gameBuilder.append(item.getName()).append("; ");
         }
-        //System.out.println();
 
         //}
         return gameBuilder;
@@ -166,19 +126,9 @@ public class GameEngine {
         builder.append("\n You are currently in the ")
                 .append(location).append("\n Where do you want to go?")
                 .append("\n Commands: \n Go North, \nGo South, \nGo East, \nGo West, \n")
-                .append("q to quit");
+                .append("q to quit\n");
         //System.out.println(builder);
         return builder;
-//        System.out.println("You are currently in the " + location);
-//        System.out.println();
-//        System.out.println("Where do you want to go?");
-//        System.out.println("Commands:");
-//        System.out.println("go north");
-//        System.out.println("go south");
-//        System.out.println("go east");
-//        System.out.println("go west");
-//        System.out.println("q to quit");
-//        System.out.println();
     }
 
     private void checkPlayerHealth() {
@@ -191,29 +141,52 @@ public class GameEngine {
     }
 
     private String[] parser(String input) {
-        return input.toLowerCase().split("[\\s]+");
+        String[] stringArr = input.toLowerCase().split("[\\s]+");
+        for (int i = 0; i < stringArr.length; i++)
+            stringArr[i] = stringArr[i].substring(0,1).toUpperCase() + stringArr[i].substring(1);
+        return stringArr;
     }
 
     private void headToNextRoom(String direction) {
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
-//            System.out.println(locations);
             JSONObject current = (JSONObject) locations.get(currentLocation);
-//            System.out.println(medBay);
             String next = (String) current.get(direction);
             if (current.containsKey(direction)) {
                 //gameBuilder.append(" \n Going ").append(direction);
-                System.out.println("Going " + direction);
                 currentLocation = next;
             } else
                 System.out.println("Can't go that way");
-//            System.out.println(east);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void pickUpItem(String thing) {
+        try {
+            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+            JSONObject current = (JSONObject) locations.get(currentLocation);
+            JSONArray itemsInRoom = (JSONArray) current.get("Item");
+
+            if (itemsInRoom.contains(thing)) {
+                System.out.println("Placed " + thing + " in your inventory");
+                Item itemToGet = new Item(thing, currentLocation);
+                player.addToInventory(itemToGet);
+            }
+                    else
+                        System.out.println(thing + " is already in your inventory");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("Item doesn't exist");
         }
     }
 }
