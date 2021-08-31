@@ -20,6 +20,7 @@ public class GameEngine {
     // gets player status
     public StringBuilder status = showStatus(currentLocation);
 
+
 //    public StringBuilder gameBuilder;
 
     //NPC NPCs;
@@ -147,11 +148,13 @@ public class GameEngine {
 //                break;
 //            }
 
-        System.out.print("Your inventory contains: ");
+        gameBuilder.append("Your inventory contains: ");
+        //System.out.print("Your inventory contains: ");
         for (Item item : player.getInventory()) {
-            System.out.print(item.getName() + " ");
+            gameBuilder.append(item.getName()).append(" ");
+            //System.out.print(item.getName() + " ");
         }
-        System.out.println();
+        //System.out.println();
 
         //}
         return gameBuilder;
@@ -162,7 +165,7 @@ public class GameEngine {
         StringBuilder builder = new StringBuilder();
         builder.append("\n You are currently in the ")
                 .append(location).append("\n Where do you want to go?")
-                .append("\n Commands: \n Go North, \nGo South, \nGo East \nGo West. \n")
+                .append("\n Commands: \n Go North, \nGo South, \nGo East, \nGo West, \n")
                 .append("q to quit");
         //System.out.println(builder);
         return builder;
@@ -213,10 +216,4 @@ public class GameEngine {
             e.printStackTrace();
         }
     }
-
-
-//    public static void main(String[] args) {
-//        GameEngine game = new GameEngine();
-//        game.runGameLoop();
-//    }
 }
