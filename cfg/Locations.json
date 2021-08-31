@@ -10,35 +10,35 @@
   "Repair Workshop": {
     "west": "Landing Dock",
     "NPC": "Engineer",
-    "Item": ["Wizzlewhat", "Space Wrench"],
+    "Item": ["wizzlewhat", "space wrench"],
     "Description": "Inside the shop you see repair parts knocked over on the ground. There's blood smeared behind a counter (someone must have had a bad accident). You take a step forward and hear the sound of a tool hit the ground. You quickly glance over and see a pair of eyes behind a stack of RAD boosters."
   },
   "Central Hub": {
     "east": "Bar",
     "west": "Medical Bay",
     "south": "Landing Dock",
-    "Item": ["Zombie Armor", "Zombie Katana"],
+    "Item": ["zombie armor", "zombie katana"],
     "Description": "As soon as you step inside you start to slowly drift upwards. You look around and see floating tables and crates. The generator must be broken so this room isn't getting any gravity. To the east you find a bright flickering neon light that reads \"Jill's Cantina\"."
   },
   "Bar": {
     "west": "Central Hub",
     "NPC": "Bartender",
-    "Item": ["Swiss Army Knife"],
+    "Item": ["swiss army knife"],
     "Description": "There's space music playing on the jukebox. The tables near the exit are stacked on each other, some broken cleanly in half. Grabbing a drink from the bar doesn't sound like a bad idea."
   },
   "Medical Bay": {
     "east": "Central Hub",
     "NPC": "Visitor",
-    "Item": ["Health Kit", "Lever"],
+    "Item": ["health kit", "lever"],
     "Description": "The smell of iron fills the room. The walls are painted red and there's a few bodies laying on the ground. There are medical supply boxes on the ground and some on the shelves, all empty. There may be more to find towards the back of the room."
   },
   "Escape Shuttle": {
     "east": "Landing Dock",
-    "Item": ["Oxygen Tank"],
+    "Item": ["oxygen tank"],
     "Description": "The area is littered with cargo boxes, rats, and wires hanging loosely from the walls."
   },
   "Ship": {
     "north": "Landing Dock",
-    "Description": "I'm on a boat"
+    "Description": "I'm on a boat."
   }
 }
