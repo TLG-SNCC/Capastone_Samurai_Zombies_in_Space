@@ -4,20 +4,23 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.resources.GameSceneListView">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controller.GameSceneController">
    <children>
       <SplitPane dividerPositions="0.8357050452781372" orientation="VERTICAL" prefHeight="775.0" prefWidth="800.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <ListView layoutX="-1.0" prefHeight="643.0" prefWidth="798.0" />
+                  <ListView layoutX="-1.0" prefHeight="643.0" prefWidth="800.0" style="-fx-background-color: black; -fx-text-fill: green;" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="419.0" prefWidth="798.0">
                <children>
-                  <TextField prefHeight="124.0" prefWidth="798.0" />
+                  <TextField fx:id="inputTextField" onAction="#handleTextFieldInput" prefHeight="124.0" prefWidth="800.0" promptText="Enter Command" style="-fx-background-color: black; -fx-text-fill: green;">
+                     <font>
+                        <Font size="16.0" />
+                     </font></TextField>
                </children>
             </AnchorPane>
         </items>
