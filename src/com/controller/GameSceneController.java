@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.engine.GameEngine;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,14 +19,44 @@ public class GameSceneController implements Initializable {
 
     @FXML
     private TextArea storyTextArea;
+
     @FXML
     private TextField inputTextField;
+
+    GameEngine gameEngine = new GameEngine();
 
     public GameSceneController() {
     }
 
+    private TextField getInputTextField() {
+        return inputTextField;
+    }
 
     private void storyTextareaContainer() throws IOException {
+        introStoryToTextarea();
+
+    }
+
+    /*
+     * handles reading of user input from the Text Input Field in the Game Scene.
+     * displays the read text in the uneditable TextArea field
+     */
+    public void handleTextFieldInput(ActionEvent event) {
+        getInputTextField().setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                storyTextArea.setText(inputTextFieldString());
+                storyTextArea.setText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
+                getInputTextField().clear();
+
+            }
+        });
+    }
+
+    /*
+     * initialized at start of game.
+     * reads main story txt file and sends add it to the textarea
+     */
+    private void introStoryToTextarea() throws IOException {
         File file = new File("cfg/IntoStory.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String str;
@@ -34,21 +65,23 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    public void handleTextFieldInput(ActionEvent event) {
-        inputTextField.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                storyTextArea.appendText(inputTextField.getText() + '\n');
-                inputTextField.clear();
-            }
-        });
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            storyTextareaContainer();
+            introStoryToTextarea();
+            appendInputToTextarea(String.valueOf(gameEngine.status));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public String inputTextFieldString() {
+        return getInputTextField().getText();
+    }
+
+    public void appendInputToTextarea(String strToDisplay) {
+        storyTextArea.appendText(strToDisplay + '\n');
+    }
+
 }
