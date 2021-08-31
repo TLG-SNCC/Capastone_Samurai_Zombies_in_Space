@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -12,7 +13,25 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <ListView layoutX="-1.0" prefHeight="643.0" prefWidth="800.0" style="-fx-background-color: black; -fx-text-fill: green;" />
+                  <SplitPane dividerPositions="0.7977386934673367" prefHeight="643.0" prefWidth="798.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: black;" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: black;">
+                           <children>
+                              <TextArea fx:id="inventory" editable="false" layoutY="58.0" prefHeight="583.0" prefWidth="158.0" style="-fx-control-inner-background: black; -fx-text-fill: green;">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </TextArea>
+                              <Label alignment="CENTER" contentDisplay="TEXT_ONLY" prefHeight="53.0" prefWidth="158.0" text="Inventory" textAlignment="CENTER" textFill="#26b509">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="419.0" prefWidth="798.0">

@@ -86,9 +86,10 @@ public class GameEngine {
 
             // perform actions
         switch (command[0]) {
-            case "look":
+            case "Look":
                 System.out.println(command[1]);
                 String response = getLookResult(command[1].strip().toLowerCase());
+                gameBuilder.append(response);
                 System.out.println(response);
                 break;
 
