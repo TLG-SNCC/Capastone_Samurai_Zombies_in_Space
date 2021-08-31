@@ -3,18 +3,15 @@ package com.engine;
 
 import com.character.Player;
 import com.item.Item;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import com.item.Weapon;
-
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Scanner;
 
 
 public class GameEngine {
@@ -45,23 +42,22 @@ public class GameEngine {
         catalog.put("katana", "bar");
 
 
-
-        //Create a door to go north
-        landingDock.put("north", "hall");
-
-        //Create a door to go south
-        hall.put("south", "landing dock");
-
-        //Create a room east of the hall leading to the bar
-        hall.put("east","bar");
-
-        //Create a room west of the bar leading to the hall
-        bar.put("west","hall");
-
-        //Adding the two rooms to the spaceship object
-        spaceship.put("landing dock", landingDock);
-        spaceship.put("hall", hall);
-        spaceship.put("bar", bar);
+//        //Create a door to go north
+//        landingDock.put("north", "hall");
+//
+//        //Create a door to go south
+//        hall.put("south", "landing dock");
+//
+//        //Create a room east of the hall leading to the bar
+//        hall.put("east","bar");
+//
+//        //Create a room west of the bar leading to the hall
+//        bar.put("west","hall");
+//
+//        //Adding the two rooms to the spaceship object
+//        spaceship.put("landing dock", landingDock);
+//        spaceship.put("hall", hall);
+//        spaceship.put("bar", bar);
 
     }
 
@@ -82,8 +78,7 @@ public class GameEngine {
                 if (command[0].equals("q")) {
                     System.out.println("Exiting game");
                     System.exit(0);
-                }
-                else
+                } else
                     System.out.println("Sorry, Dave. I can't do that.");
                 continue;
             }
@@ -98,7 +93,7 @@ public class GameEngine {
                     break;
                 case "go":
                     // Capitalize the directions so that it could read the JSON file
-                    String upper = command[1].substring(0,1).toUpperCase() + command[1].substring(1);
+                    String upper = command[1].substring(0, 1).toUpperCase() + command[1].substring(1);
                     headToNextRoom(upper);
                     //check that this room is accessible from current room
                     player.setLocation(currentLocation);
@@ -114,6 +109,14 @@ public class GameEngine {
                 case "talk":
                     System.out.println("you're talking.");
                     break;
+                case "heal":
+                    if (currentLocation.contains("Medical Bay")){
+                        System.out.println("before " + player.getHealth());
+                        player.setHealth(player.getHealth() + 5);
+                        System.out.println("after " + player.getHealth());
+                    } else{
+                        System.out.println("Sorry, Dave. You must be in the Medical Bay to heal.");
+                    }
             }
 
             //update win/lose status
@@ -177,8 +180,7 @@ public class GameEngine {
             if (current.containsKey(direction)) {
                 System.out.println("Going " + direction);
                 currentLocation = next;
-            }
-            else
+            } else
                 System.out.println("Can't go that way");
 //            System.out.println(east);
         } catch (FileNotFoundException e) {

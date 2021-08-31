@@ -1,8 +1,10 @@
 package com.character;
 
+import com.engine.GameEngine;
 import com.item.Item;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A singleton class to represent the single player in the game.
@@ -49,7 +51,7 @@ public enum Player {
      * @return boolean
      */
     public boolean addToInventory(Item item) {
-        if (item.getLocation() == getLocation()) {
+        if (item.getLocation().equals(getLocation())) {
             this.inventory.add(item);
             return true;
         }
@@ -109,5 +111,14 @@ public enum Player {
      */
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public int attack(){
+        return (int) (Math.random() * 5) + 1;
+    }
+
+    public void takeDamage(int damageTaken){
+        int currentHp = getHealth() - damageTaken;
+        setHealth(currentHp);
     }
 }
