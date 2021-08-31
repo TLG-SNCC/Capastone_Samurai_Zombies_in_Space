@@ -80,6 +80,9 @@ public class GameEngine {
                 //System.out.println("Exiting game");
                 System.exit(0);
                 //TODO: Exit game scene without closing whole game
+            }
+            if (command[0].equals("look")){
+                examineRoom();
             } else
                 gameBuilder.append("Sorry, Dave. I can't do that.");
             //System.out.println("Sorry, Dave. I can't do that.");
@@ -89,26 +92,40 @@ public class GameEngine {
             // perform actions
         switch (command[0]) {
             case "look":
-                System.out.println(command[1]);
-                String response = getLookResult(command[1].strip().toLowerCase());
-                System.out.println(response);
+                if (command.length == 4) {
+                    gameBuilder.append(getLookResult(command[1] + " " + command[2] + " " + command[3]));
+                    break;
+                }
+                if (command.length == 3) {
+                    gameBuilder.append(getLookResult(command[1] + " " + command[2]));
+                    break;
+                }
+                if (command.length == 2) {
+                    gameBuilder.append(getLookResult(command[1]));
+                    break;
+                } else
+                    gameBuilder.append(examineRoom());
                 break;
 
             case "hit":
                 System.out.println("You're hitting.");
                 break;
             case "go":
-                headToNextRoom(command[1]);
+                gameBuilder.append(headToNextRoom(command[1]));
                 //check that this room is accessible from current room
                 player.setLocation(currentLocation);
                 break;
             case "get":
+                if (command.length == 4) {
+                    gameBuilder.append(pickUpItem(command[1] + " " + command[2] + " " + command[3]));
+                    break;
+                }
                 if (command.length == 3) {
-                    pickUpItem(command[1] + " " + command[2]);
+                    gameBuilder.append(pickUpItem(command[1] + " " + command[2]));
                     break;
                 }
                 if (command.length == 2) {
-                    pickUpItem(command[1]);
+                    gameBuilder.append(pickUpItem(command[1]));
                     break;
                 } else {
                     gameBuilder.append("\n \"Sorry, Dave. I can't get that.\n");
@@ -156,7 +173,7 @@ public class GameEngine {
             System.out.println(catalog);
             response = "You don't see a " + object + ".";
         }
-        return response;
+        return response + "\n";
     }
 
 
@@ -179,13 +196,31 @@ public class GameEngine {
     }
 
     private String[] parser(String input) {
-        String[] stringArr = input.toLowerCase().split("[\\s]+");
-        for (int i = 0; i < stringArr.length; i++)
-            stringArr[i] = stringArr[i].substring(0,1).toLowerCase() + stringArr[i].substring(1);
-        return stringArr;
+//        String[] stringArr = input.toLowerCase().split("[\\s]+");
+//        for (int i = 0; i < stringArr.length; i++)
+//            stringArr[i] = stringArr[i].substring(0,1).toLowerCase() + stringArr[i].substring(1);
+        return input.toLowerCase().split("[\\s]+");
     }
 
-    private void headToNextRoom(String direction) {
+    private String examineRoom(){
+        String description = "";
+        try {
+            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+            JSONObject current = (JSONObject) locations.get(currentLocation);
+            description = (String) current.get("Description");
+            return description + "\n";
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return description + "\n";
+    }
+    private String headToNextRoom(String direction) {
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
             JSONObject current = (JSONObject) locations.get(currentLocation);
@@ -193,8 +228,8 @@ public class GameEngine {
             if (current.containsKey(direction)) {
                 //gameBuilder.append(" \n Going ").append(direction);
                 currentLocation = next;
-            } else
-                System.out.println("Can't go that way");
+                return "You moved " + direction;
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -202,23 +237,22 @@ public class GameEngine {
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
-            System.out.println("Can't go that way");
+            System.out.println("Can't go that way\n");
         }
+        return "Can't go that way\n";
     }
 
-    private static void pickUpItem(String thing) {
+    private static String pickUpItem(String thing) {
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
             JSONObject current = (JSONObject) locations.get(currentLocation);
             JSONArray itemsInRoom = (JSONArray) current.get("Item");
 
             if (itemsInRoom.contains(thing)) {
-                System.out.println("Placed " + thing + " in your inventory");
                 Item itemToGet = new Item(thing, currentLocation);
                 player.addToInventory(itemToGet);
+                return "Placed " + thing + " in your inventory\n";
             }
-                    else
-                        System.out.println(thing + " is already in your inventory");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -226,7 +260,8 @@ public class GameEngine {
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
-            System.out.println("Item doesn't exist");
+            return "Item doesn't exist\n";
         }
+        return thing + " doesn't exist\n";
     }
 }
