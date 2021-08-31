@@ -44,7 +44,8 @@ public class GameEngine {
     }
 
     public StringBuilder runGameLoop(String input) {
-        StringBuilder gameBuilder = showStatus(currentLocation);
+        StringBuilder gameBuilder = new StringBuilder();
+
 
         // Start loop
 //        boolean winStatus = false;
@@ -111,11 +112,11 @@ public class GameEngine {
 //                break;
 //            }
 
-        gameBuilder.append("Your inventory contains: ");
+        gameBuilder.append("\n Your inventory contains:\n");
         for (Item item : player.getInventory()) {
             gameBuilder.append(item.getName()).append("; ");
         }
-
+        gameBuilder.append(showStatus(currentLocation));
         //}
         return gameBuilder;
     }
@@ -127,7 +128,6 @@ public class GameEngine {
                 .append(location).append("\n Where do you want to go?")
                 .append("\n Commands: \n Go North, \nGo South, \nGo East, \nGo West, \n")
                 .append("q to quit\n");
-        //System.out.println(builder);
         return builder;
     }
 
@@ -163,6 +163,8 @@ public class GameEngine {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("Can't go that way");
         }
     }
 
