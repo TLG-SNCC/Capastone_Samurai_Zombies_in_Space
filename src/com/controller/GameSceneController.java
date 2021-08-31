@@ -46,8 +46,8 @@ public class GameSceneController implements Initializable {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
                 storyTextArea.appendText(inputTextFieldString());
                 storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
-
                 getInputTextField().clear();
+
             }
         });
     }
