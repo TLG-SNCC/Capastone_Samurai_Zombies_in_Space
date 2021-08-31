@@ -8,7 +8,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import com.item.Weapon;
 
 
 import java.io.FileNotFoundException;
@@ -18,10 +17,10 @@ import java.util.*;
 
 
 public class GameEngine {
-    boolean winStatus = false;
-    boolean loseStatus = false;
-    static String currentLocation = "Landing Dock";
-    Player player;
+    private boolean winStatus = false;
+    private boolean loseStatus = false;
+    private static String currentLocation = "Landing Dock";
+    private Player player;
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
     HashMap<String, String> catalog = new HashMap<>();
@@ -39,29 +38,25 @@ public class GameEngine {
         // Get Locations
         // locations = new Location();
 
-        // Get Items
-        catalog.put("spacewrench", "landing dock");
-        catalog.put("lever", "hall");
-        catalog.put("katana", "bar");
-
-
+        // Get Items into Catalog
+        catalog = Item.readAll();
 
         //Create a door to go north
-        landingDock.put("north", "hall");
+        //landingDock.put("north", "hall");
 
         //Create a door to go south
-        hall.put("south", "landing dock");
+        //hall.put("south", "landing dock");
 
         //Create a room east of the hall leading to the bar
-        hall.put("east","bar");
+        //hall.put("east","bar");
 
         //Create a room west of the bar leading to the hall
         bar.put("west","hall");
 
         //Adding the two rooms to the spaceship object
-        spaceship.put("landing dock", landingDock);
-        spaceship.put("hall", hall);
-        spaceship.put("bar", bar);
+//        spaceship.put("landing dock", landingDock);
+//        spaceship.put("hall", hall);
+//        spaceship.put("bar", bar);
 
     }
 
@@ -91,7 +86,9 @@ public class GameEngine {
             // perform actions
             switch (command[0]) {
                 case "look":
-                    System.out.println("You're looking.");
+                    System.out.println(command[1]);
+                    String response = getLookResult(command[1].strip().toLowerCase());
+                    System.out.println(response);
                     break;
                 case "hit":
                     System.out.println("You're hitting.");
@@ -138,6 +135,20 @@ public class GameEngine {
             System.out.println();
 
         }
+    }
+
+    private String getLookResult(String objectToFind) {
+        String object = objectToFind.strip().toLowerCase();
+        String response = "";
+        if (object.equals("around")) {
+            response = "Don't look too hard now.";
+        } else if (catalog.containsKey(object)) {
+            response = catalog.get(object);
+        } else {
+            System.out.println(catalog);
+            response = "You don't see a " + object + ".";
+        }
+        return response;
     }
 
 
