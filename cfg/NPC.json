@@ -1,32 +1,32 @@
 {
-  "Engineer" : {
-    "Dialogue" : [
+  "engineer" : {
+    "dialogue" : [
       "\"I don’t know where they came from,\" she says, shaking her head. \"Ships dock and leave all the time, but none of them has ever dropped off a nightmare like this.\"",
       "\"Might have been an hour between the first time I heard a comm about someone getting bit and the alarms going off. It was so fast.\" A thump resonates through the floor grates, and she crouches with a large wrench in her hand.",
       "\"Did you say your FTL drive is damaged? I have a space wrench here. Maybe it will help. Sure won’t help any of us left here. If you get it working, come back for me, will you?\""
     ],
-    "Description" :  "When the engineer emerges from where she hid behind a piece of equipment, she is disheveled, with a torn sleeve and a bruised arm, but she is not bloody. Her eyes are wide and alert, and she jumps at every noise."},
-  "Visitor": {
-    "Dialogue" : [
+    "description" :  ["When the engineer emerges from where she hid behind a piece of equipment, she is disheveled, with a torn sleeve and a bruised arm, but she is not bloody. Her eyes are wide and alert, and she jumps at every noise."]},
+  "visitor": {
+    "dialogue" : [
       "The injured visitor has clearly lost a lot of blood and can no longer stand. \"Please help me. Take me with you. I swear, they didn’t bite me. They cut me with their swords, but they didn’t bite me. I got away.\"",
       "\"They were already here when my ship docked. I don’t know where the pilot went, but when I ran back to the port where we docked, the ship was gone.\"",
       "\"It’s almost spookier since the alarms stopped. Was it them? Are they smart enough to turn off alarms?\" He shivers. \"Flying Spaghetti Monster help us.\""],
-    "Description" : "A station visitor is propped against the far wall, bloody and obviously mortally wounded. He watches you with half-lidded eyes. He won't be conscious much longer."
+    "description" : ["A station visitor is propped against the far wall, bloody and obviously mortally wounded. He watches you with half-lidded eyes. He won't be conscious much longer."]
   },
-  "Guard": {
-    "Dialogue": [
+  "guard": {
+    "dialogue": [
       "\"I lost my taser. Doesn’t help anyway. The only thing that seems to hurt them is a baton to the head, but you have to get around that helmet first.\" They stare at the bloody, dented metal baton in their hand.",
       "\"Hey, I saw someone remove the fuel lever from one of the docks. Said they were taking it to the shuttle docks to use there – said it looked like giant rats had chewed up everything in there, and the fuel lever wouldn’t even attach anymore. Said it was the last one they could find that was still usable. Weird, right? Why are they chewing up the docks like that?\"",
       "\"I wonder if you can kill them by cutting off their heads.\""
     ],
-    "Description": "The station guard's uniform is ripped and has singe marks on the sleeves and legs. They are terrified, wide-eyed and breathing in short, quick gasps."
+    "description": ["The station guard's uniform is ripped and has singe marks on the sleeves and legs. They are terrified, wide-eyed and breathing in short, quick gasps."]
   },
-  "Bartender": {
-    "Dialogue" : [
+  "bartender": {
+    "dialogue" : [
       "She takes a drag on her digi-cig and pretends like it does anything for her. \"Heard about Samurai zombies over in some backwater near Polaris. Thought it was a rumor. Hmph.\"",
       "\"I can get you anything but water. They, whatever they are, somehow cut off our supply from the water recycler.\"",
       "\"Have you seen one yet? Good luck, traveler. I’m gonna hole up here and breathe my last. Always said I’d go down with this station, but I always figured I'd never actually have to.\""
     ],
-    "Description" : "The station's bartender has obviously spent most of her life in space, her skin old and wrinkling but not sagging, and her wiry, lean frame taller than most. She looks like she'd normally be half-interested in what's happening on the station, but today, she's at least three-quarters interested."
+    "description" : ["The station's bartender has obviously spent most of her life in space, her skin old and wrinkling but not sagging, and her wiry, lean frame taller than most. She looks like she'd normally be half-interested in what's happening on the station, but today, she's at least three-quarters interested."]
   }
 }
