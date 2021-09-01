@@ -1,6 +1,7 @@
 package com.engine;
 
 
+import com.character.NPC;
 import com.character.Player;
 import com.item.Item;
 import org.json.simple.JSONArray;
@@ -115,7 +116,8 @@ public class GameEngine {
                 }
                 break;
             case "talk":
-                gameBuilder.append("\n you're talking. \n");
+                NPC character = new NPC(command[1]);
+                gameBuilder.append(character.getDialogue());
                 break;
             case "heal":
                 if (currentLocation.contains("Medical Bay")){
