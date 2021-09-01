@@ -1,33 +1,34 @@
 package com.engine;
 
 
+import com.character.NPC;
 import com.character.Player;
 import com.item.Item;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import com.item.Weapon;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Scanner;
-
-
 
 public class GameEngine {
-    boolean winStatus = false;
-    boolean loseStatus = false;
-    String currentLocation = "landing dock";
-    Player player;
+
+    static String currentLocation = "Landing Dock";
+    static Player player;
+    public StringBuilder status = showStatus(currentLocation);
+
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
     HashMap<String, String> catalog = new HashMap<>();
+    static JSONParser parser = new JSONParser();
 
-    // Setting up the different rooms in the spaceship
-    HashMap<String, HashMap<String, String>> spaceship = new HashMap<>();
-
-    //Create a landing dock room
-    HashMap<String, String> landingDock = new HashMap<>();
-
-    //Create a hall room
-    HashMap<String, String> hall = new HashMap<>();
+    //Create a bar room
+    HashMap<String, String> bar = new HashMap<>();
 
     public GameEngine() {
         // Set up Player
@@ -38,134 +39,153 @@ public class GameEngine {
         // Get Locations
         // locations = new Location();
 
-        // Get Items
-        catalog.put("spacewrench", "landing dock");
-        catalog.put("lever", "hall");
 
+        // Get Items into Catalog
+        catalog = Item.readAll();
 
         //Create a door to go north
-        landingDock.put("north", "hall");
+        //landingDock.put("north", "hall");
 
         //Create a door to go south
-        hall.put("south", "landing dock");
+        //hall.put("south", "landing dock");
 
-        //Adding the two rooms to the spaceship object
-        spaceship.put("landing dock", landingDock);
-        spaceship.put("hall", hall);
+        //Create a room east of the hall leading to the bar
+        //hall.put("east","bar");
+
+        //Create a room west of the bar leading to the hall
+        bar.put("west","hall");
+
+
     }
 
-    public void runGameLoop() {
+    public StringBuilder runGameLoop(String input) {
+        StringBuilder gameBuilder = new StringBuilder();
+
 
         // Start loop
-        while (!winStatus && !loseStatus) {
-            //show status
-            showStatus(currentLocation);
+//        boolean winStatus = false;
+//        boolean loseStatus = false;
+        // while (!winStatus && !loseStatus) {
+        //show status
+//            showStatus(currentLocation);
 
-            // get user input
-            Scanner sc = new Scanner(System.in);
-            String input = sc.nextLine();
+        // get user input
+//            Scanner sc = new Scanner(System.in);
+//            String input = sc.nextLine();
 
-            String[] command;
-            command = parser(input);
-            if (command.length < 2) {
-                if (command[0].equals("q")) {
-                    System.out.println("Exiting game");
-                    System.exit(0);
-                }
-                else
-                    System.out.println("Sorry, Dave. I can't do that.");
-                continue;
+        String[] command;
+        command = parser(input);
+        if (command.length < 2) {
+            if (command[0].equals("q")) {
+                gameBuilder.append("Exiting game");
+                //System.out.println("Exiting game");
+                System.exit(0);
+                //TODO: Exit game scene without closing whole game
             }
+            if (command[0].equals("look")){
+                examineRoom();
+            } else
+                gameBuilder.append("Sorry, Dave. I can't do that.");
+            //System.out.println("Sorry, Dave. I can't do that.");
+            //continue;
+        }
 
             // perform actions
-            switch (command[0]) {
-                case "look":
-                    System.out.println("You're looking.");
+        switch (command[0]) {
+            case "look":
+                if (command.length == 4) {
+                    gameBuilder.append(getLookResult(command[1] + " " + command[2] + " " + command[3]));
                     break;
-                case "hit":
-                    System.out.println("You're hitting.");
+                }
+                if (command.length == 3) {
+                    gameBuilder.append(getLookResult(command[1] + " " + command[2]));
                     break;
-                case "go":
-                    //check that this room is accessible from current room
-                    player.setLocation(command[1]);
-                    System.out.println("You're in the " + command[1]);
-                    if (command[1].equals("north")){
-                        if (spaceship.get(currentLocation).containsKey("north"))
-                            currentLocation = spaceship.get(currentLocation).get("north");
-                        else
-                            System.out.println("Cannot go north");
-                    }
-
-                    if (command[1].equals("south")){
-                        if (spaceship.get(currentLocation).containsKey("south"))
-                            currentLocation = spaceship.get(currentLocation).get("south");
-                        else
-                            System.out.println("Cannot go south");
-                    }
-
-                    if (command[1].equals("east")){
-                        if (spaceship.get(currentLocation).containsKey("east"))
-                            currentLocation = spaceship.get(currentLocation).get("east");
-                        else
-                            System.out.println("Cannot go east");
-                    }
-
-                    if (command[1].equals("west")){
-                        if (spaceship.get(currentLocation).containsKey("west"))
-                            currentLocation = spaceship.get(currentLocation).get("west");
-                        else
-                            System.out.println("Cannot go west");
-                    }
+                }
+                if (command.length == 2) {
+                    gameBuilder.append(getLookResult(command[1]));
                     break;
-                case "get":
-                    Item newItem = new Item(command[1], player.getLocation());
-                    if (catalog.containsKey(command[1]) && catalog.get(command[1]) == currentLocation) {
-                        player.addToInventory(newItem);
-                    } else {
-                        System.out.println("Sorry, Dave. I can't get that.");
-                    }
-                    break;
-                case "talk":
-                    System.out.println("you're talking.");
-                    break;
-            }
-
-            //update win/lose status
-            checkPlayerHealth();
-            checkPuzzleComplete();
-
-            //check for lose/win status
-            if (winStatus) {
-                System.out.println("You have won.");
+                } else
+                    gameBuilder.append(examineRoom());
                 break;
-            }
 
-            if (loseStatus) {
-                System.out.println("You have lost.");
+            case "hit":
+                System.out.println("You're hitting.");
                 break;
-            }
-
-            System.out.print("Your inventory contains: ");
-            for (Item item : player.getInventory()) {
-                System.out.print(item.getName() + " ");
-            }
-            System.out.println();
-
+            case "go":
+                gameBuilder.append(headToNextRoom(command[1]));
+                //check that this room is accessible from current room
+                player.setLocation(currentLocation);
+                break;
+            case "get":
+                if (command.length == 4) {
+                    gameBuilder.append(pickUpItem(command[1] + " " + command[2] + " " + command[3]));
+                    break;
+                }
+                if (command.length == 3) {
+                    gameBuilder.append(pickUpItem(command[1] + " " + command[2]));
+                    break;
+                }
+                if (command.length == 2) {
+                    gameBuilder.append(pickUpItem(command[1]));
+                    break;
+                } else {
+                    gameBuilder.append("\n \"Sorry, Dave. I can't get that.\n");
+                }
+                break;
+            case "talk":
+                NPC character = new NPC(command[1]);
+                gameBuilder.append(character.getDialogue());
+                break;
+            case "heal":
+                if (currentLocation.contains("Medical Bay")){
+                    player.setHealth(player.getHealth() + 5);
+                    gameBuilder.append("\nYour current health is: " + player.getHealth());
+                } else {
+                    gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
+                }
         }
+
+        //update win/lose status
+        checkPlayerHealth();
+        checkPuzzleComplete();
+
+        //check for lose/win status
+//            if (winStatus) {
+//                System.out.println("You have won.");
+//                break;
+//            }
+
+        gameBuilder.append("\n Your inventory contains:\n");
+        for (Item item : player.getInventory()) {
+            gameBuilder.append(item.getName()).append("; ");
+        }
+        gameBuilder.append(showStatus(currentLocation));
+        //}
+        return gameBuilder;
+    }
+
+    private String getLookResult(String objectToFind) {
+        String object = objectToFind.strip().toLowerCase();
+        String response = "";
+        if (object.equals("around")) {
+            response = "Don't look too hard now.";
+        } else if (catalog.containsKey(object)) {
+            response = catalog.get(object);
+        } else {
+            System.out.println(catalog);
+            response = "You don't see a " + object + ".";
+        }
+        return response + "\n";
     }
 
 
-    public static void showStatus(String location) {
-        System.out.println("You are currently in the " + location);
-        System.out.println();
-        System.out.println("Where do you want to go?");
-        System.out.println("Commands:");
-        System.out.println("go north");
-        System.out.println("go south");
-        System.out.println("go east");
-        System.out.println("go west");
-        System.out.println("q to quit");
-        System.out.println();
+    public StringBuilder showStatus(String location) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n You are currently in the ")
+                .append(location).append("\n Where do you want to go?")
+                .append("\n Commands: \n Go North, \nGo South, \nGo East, \nGo West, \n")
+                .append("q to quit\n");
+        return builder;
     }
 
     private void checkPlayerHealth() {
@@ -178,11 +198,72 @@ public class GameEngine {
     }
 
     private String[] parser(String input) {
+//        String[] stringArr = input.toLowerCase().split("[\\s]+");
+//        for (int i = 0; i < stringArr.length; i++)
+//            stringArr[i] = stringArr[i].substring(0,1).toLowerCase() + stringArr[i].substring(1);
         return input.toLowerCase().split("[\\s]+");
     }
 
-    public static void main(String[] args) {
-        GameEngine game = new GameEngine();
-        game.runGameLoop();
+    private String examineRoom(){
+        String description = "";
+        try {
+            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+            JSONObject current = (JSONObject) locations.get(currentLocation);
+            description = (String) current.get("Description");
+            return description + "\n";
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return description + "\n";
+    }
+    private String headToNextRoom(String direction) {
+        try {
+            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+            JSONObject current = (JSONObject) locations.get(currentLocation);
+            String next = (String) current.get(direction);
+            if (current.containsKey(direction)) {
+                //gameBuilder.append(" \n Going ").append(direction);
+                currentLocation = next;
+                return "You moved " + direction;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("Can't go that way\n");
+        }
+        return "Can't go that way\n";
+    }
+
+    private static String pickUpItem(String thing) {
+        try {
+            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+            JSONObject current = (JSONObject) locations.get(currentLocation);
+            JSONArray itemsInRoom = (JSONArray) current.get("Item");
+
+            if (itemsInRoom.contains(thing)) {
+                Item itemToGet = new Item(thing, currentLocation);
+                player.addToInventory(itemToGet);
+                return "Placed " + thing + " in your inventory\n";
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            return "Item doesn't exist\n";
+        }
+        return thing + " doesn't exist\n";
     }
 }

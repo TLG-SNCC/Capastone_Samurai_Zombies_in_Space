@@ -9,3 +9,44 @@ Kerri-Leigh Grady </br> Adrian Torres </br> Karlo Mangubat </br> Joseph Valdez
 
 # Game Play
 <p>The winning strategy is to locate the lever, return to the dock, reattach, and pull the lever. Then, go to the repair shop to procure the wizzlewhat, and return to the ship to make the repair and get out of Dodge.</p>
+
+# Project Directory Structure
+<pre>.
+├── cfg
+│   ├── IntoStory.txt
+│   ├── Items.json
+│   ├── Locations.json
+│   └── NPC.json
+├── lib
+│   ├── javafx-sdk-16
+│   └── junit-4.13
+├── src
+│   ├── assets
+│   │   └── images
+│   │       └── introfont
+│   │           ├── in.png
+│   │           ├── samurai.png
+│   │           ├── space.png
+│   │           └── zombies.png
+│   ├── com
+│   │   ├── character
+│   │   │   └── Player.java
+│   │   ├── client
+│   │   │   └── Main.java
+│   │   ├── controller
+│   │   │   ├── FXMLDocumentController.java
+│   │   │   └── GameSceneController.java
+│   │   ├── engine
+│   │   │   └── GameEngine.java
+│   │   ├── item
+│   │   │   └── Item.java
+│   │   └── resources
+│   │       ├── gameScene.fxml
+│   │       └── introScreen.fxml
+├── test
+│   └── com
+│       ├── character
+│       │   └── PlayerTest.java
+│       └── item
+│           └── ItemTest.java
+</pre>

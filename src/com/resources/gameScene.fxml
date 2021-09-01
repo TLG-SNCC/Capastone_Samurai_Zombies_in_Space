@@ -44,8 +44,8 @@
         <SplitPane dividerPositions="0.7964824120603015" orientation="VERTICAL" prefHeight="775.0" prefWidth="800.0">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="775.0" prefWidth="800.0">
-                    <children>
-                        <TextArea fx:id="storyTextArea" editable="false" layoutY="-1.0" prefHeight="775.0"
+                    <children >
+                        <TextArea fx:id="storyTextArea" style="-fx-control-inner-background: Black; -fx-text-fill: green" editable="false" layoutY="-1.0" prefHeight="775.0"
                                   prefWidth="800.0" wrapText="true">
                             <font>
                                 <Font size="16.0"/>
@@ -55,7 +55,7 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="775.0" prefWidth="800.0"/>
                 <TextField fx:id="inputTextField" prefHeight="775.0" prefWidth="800.0"
-                           promptText="Commands Go Here" style="-fx-background-color: Black;"
+                           promptText="Commands Go Here" style="-fx-background-color: Black; -fx-text-fill: green"
                            onAction="#handleTextFieldInput">
                     <font>
                         <Font size="16.0"/>
