@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("../resources/introScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/introScreen.fxml"));
         primaryStage.setTitle("Samurai Zombies in Space");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

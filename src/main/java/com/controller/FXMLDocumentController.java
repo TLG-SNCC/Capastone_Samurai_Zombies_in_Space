@@ -13,10 +13,11 @@ public class FXMLDocumentController {
     private Parent root;
 
     public void switchFromIntroToGame(javafx.event.ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../resources/gameScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/gameScene.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+
     }
 }
