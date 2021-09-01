@@ -3,6 +3,7 @@ package com.engine;
 
 import com.character.NPC;
 import com.character.Player;
+import com.character.Zombie;
 import com.item.Item;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,6 +27,7 @@ public class GameEngine {
     //NPC zombies; ?? later for tracking how many are alive and where?
     HashMap<String, String> catalog = new HashMap<>();
     static JSONParser parser = new JSONParser();
+    Zombie zombie = new Zombie(30, "Bar");
 
     //Create a bar room
     HashMap<String, String> bar = new HashMap<>();
@@ -128,11 +130,28 @@ public class GameEngine {
                 break;
             case "heal":
                 if (currentLocation.contains("Medical Bay")) {
-                    player.setHealth(player.getHealth() + 5);
-                    gameBuilder.append("\nYour current health is: ").append(player.getHealth());
+                    if (player.getHealth() >= 30) {
+                        gameBuilder.append("\nYou're at max health.");
+                    } else {
+                        player.setHealth(player.getHealth() + 5);
+                        gameBuilder.append("\nYour current health is: " + player.getHealth() + "HP. ");
+                    }
                 } else {
                     gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
                 }
+                break;
+            case "fight":
+                if (currentLocation.contains("Bar")) {
+                    zombie.takeDamage(zombie.attack());
+                    if (zombie.getHealth() <= 0) {
+                        gameBuilder.append("\nYou dealt a fatal blow! The Zomburai is dead.");
+                    } else {
+                        gameBuilder.append("\nYou strike the Zomburai. It has " + zombie.getHealth() + "HP left.");
+                    }
+                } else {
+                    gameBuilder.append("\nDave, stay focused. You can pick a fight later.");
+                }
+                break;
         }
 
         //update win/lose status
