@@ -107,12 +107,13 @@ public class GameEngine {
                 }
                 break;
             case "fight":
-                if (currentLocation.contains("Bar")) {
-                    zombie.takeDamage(zombie.attack());
-                    if (zombie.getHealth() <= 0) {
-                        gameBuilder.append("\nYou dealt a fatal blow! The Zomburai is dead.");
-                    } else {
-                        gameBuilder.append("\nYou strike the Zomburai. It has " + zombie.getHealth() + "HP left.");
+                System.out.println(command[1].equals("zombie"));
+                System.out.println(checkForZombies());
+                if (checkForZombies() && (command.length == 1  || command[1].equals("zombie"))) {
+                    Zombie zombie = new Zombie(6, currentLocation);
+                    player.setFightingZombie(true);
+                    while (player.getFightingZombie()){
+                        gameBuilder.append(fightLoop(zombie));
                     }
                 } else {
                     gameBuilder.append("\nDave, stay focused. You can pick a fight later.");
@@ -133,6 +134,64 @@ public class GameEngine {
         return gameBuilder.append(showStatus(currentLocation));
     }
 
+    private Boolean checkForZombies(){
+        try {
+            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+            JSONObject current = (JSONObject) locations.get(currentLocation);
+            String zombie = (String) current.get("enemy");
+            if (zombie.equals("Zombie")){
+                return true;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("No zombies in " + currentLocation);
+        }
+        return false;
+    }
+
+    private StringBuilder fightLoop(Zombie zombie){
+        StringBuilder gameBuilder = new StringBuilder();
+
+        Item zombieKatana = new Item("zombie katana", "Central Hub");
+        gameBuilder.append("\nYou're attacking the zombie.");
+
+        if (currentLocation.contains("Landing Dock")){
+            gameBuilder.append("\nPlayer: " + player.getHealth() + "HP. Zombie: " + zombie.getHealth()+ "HP.");
+
+            if (player.getHealth() > 0 && player.checkInventory(zombieKatana)) {
+                zombie.takeDamage(zombie.attack() * 2);
+                gameBuilder.append("\nYou swing your katana. Zomburai has " + zombie.getHealth() + "HP.");
+            } else {
+                zombie.takeDamage(zombie.attack());
+                gameBuilder.append("\nYou used your fists. Zomburai has " + zombie.getHealth() + "HP.");
+            }
+
+//                        Thread.sleep(500); // Only works with sout. gameBuilder does a delay and then prints
+            if (zombie.getHealth() > 0) {
+                player.takeDamage(player.attack());
+                gameBuilder.append("\nThe Zomburai hits you. You have " + player.getHealth() + "HP.");
+            }
+
+
+            if (player.getHealth() <= 0 || zombie.getHealth() <= 0){
+                if (player.getHealth() > 0){
+                    gameBuilder.append("\nYou managed to kill the Zomburai!\n");
+                    player.setFightingZombie(false);
+                } else {
+                    gameBuilder.append("\nLooks like you've been killed. Womp womp.\n");
+                    player.setFightingZombie(false);
+                }
+            }
+        } else {
+            gameBuilder.append("\nJust because you can, doesn't mean you should.");
+        }
+        return gameBuilder;
+    }
     private StringBuilder showInstructions() {
         StringBuilder builder = new StringBuilder();
         builder.append("\n Commands: ")
