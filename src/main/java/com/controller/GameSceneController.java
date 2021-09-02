@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.character.Player;
 import com.engine.GameEngine;
 import com.item.Item;
 import javafx.event.ActionEvent;
@@ -37,11 +38,6 @@ public class GameSceneController implements Initializable {
         return inputTextField;
     }
 
-    private void storyTextareaContainer() throws IOException {
-        introStoryToTextarea();
-
-    }
-
     /*
      * handles reading of user input from the Text Input Field in the Game Scene.
      * displays the read text in the uneditable TextArea field
@@ -51,24 +47,18 @@ public class GameSceneController implements Initializable {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
                 storyTextArea.appendText(" > " + inputTextFieldString() + "\n");
                 storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
-                getInputTextField().clear();
-
-                //TODO: dynamically set inventory
                 getPlayerInventory();
+                getInputTextField().clear();
             }
         });
     }
 
     private void getPlayerInventory() {
         StringBuilder playerInventory = new StringBuilder();
-        if (gameEngine.inventory != null) {
             for (Item item : gameEngine.inventory) {
                 playerInventory.append(item.getName()).append("\n");
-                inventory.appendText(String.valueOf(playerInventory));
+                inventory.setText(String.valueOf(playerInventory));
             }
-            // need to clear the old list so we dont duplicate past items when getting a new one
-            gameEngine.inventory.clear();
-        }
     }
     /*
      * initialized at start of game.
