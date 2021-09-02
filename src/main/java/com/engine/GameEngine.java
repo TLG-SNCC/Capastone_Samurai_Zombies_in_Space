@@ -35,34 +35,6 @@ public class GameEngine {
     //Create a bar room
     HashMap<String, String> bar = new HashMap<>();
 
-//    public GameEngine() {
-//        // Set up Player
-//        player = Player.PLAYER;
-//        // Get NPCs
-//        // npcs = new NPC();
-//
-//        // Get Locations
-//        // locations = new Location();
-//        inventory = player.getInventory();
-//
-//        // Get Items into Catalog
-//        catalog = Item.readAll();
-//
-//        //Create a door to go north
-//        //landingDock.put("north", "hall");
-//
-//        //Create a door to go south
-//        //hall.put("south", "landing dock");
-//
-//        //Create a room east of the hall leading to the bar
-//        //hall.put("east","bar");
-//
-//        //Create a room west of the bar leading to the hall
-//        bar.put("west", "hall");
-//
-//
-//    }
-
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = new StringBuilder();
         inventory = player.getInventory();
