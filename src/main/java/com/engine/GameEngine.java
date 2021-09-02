@@ -13,15 +13,18 @@ import org.json.simple.parser.ParseException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class GameEngine {
 
-    static String currentLocation = "Landing Dock";
-    static Player player;
+    private String currentLocation = "Landing Dock";
+    private final Player player = Player.PLAYER;
+
     public StringBuilder status = showStatus(currentLocation);
-    public List<Item> inventory = Player.PLAYER.getInventory();
+    public List<Item> inventory;
+
 
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
@@ -32,76 +35,32 @@ public class GameEngine {
     //Create a bar room
     HashMap<String, String> bar = new HashMap<>();
 
-    public GameEngine() {
-        // Set up Player
-        player = Player.PLAYER;
-        // Get NPCs
-        // npcs = new NPC();
-
-        // Get Locations
-        // locations = new Location();
-
-
-        // Get Items into Catalog
-        catalog = Item.readAll();
-
-        //Create a door to go north
-        //landingDock.put("north", "hall");
-
-        //Create a door to go south
-        //hall.put("south", "landing dock");
-
-        //Create a room east of the hall leading to the bar
-        //hall.put("east","bar");
-
-        //Create a room west of the bar leading to the hall
-        bar.put("west", "hall");
-
-
-    }
-
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = new StringBuilder();
+        inventory = player.getInventory();
+
         // Start loop
 //        boolean winStatus = false;
 //        boolean loseStatus = false;
         // while (!winStatus && !loseStatus) {
 
         String[] command;
-        command = parser(input);
-        if (command.length < 2) {
-            if (command[0].equals("q")) {
-                gameBuilder.append("Exiting game");
-                System.exit(0);
-                //TODO: Exit game scene without closing whole game
-            }
-            if (command[0].equals("look")) {
-                examineRoom();
-            } else
-                gameBuilder.append("Sorry, Dave. I can't do that.");
-            //continue;
-        }
+        command = Parser.parseInput(input);
 
         // perform actions
         switch (command[0]) {
-            case "look":
-                if (command.length == 4) {
-                    gameBuilder.append(getLookResult(command[1] + " " + command[2] + " " + command[3]));
-                    break;
-                }
-                if (command.length == 3) {
-                    gameBuilder.append(getLookResult(command[1] + " " + command[2]));
-                    break;
-                }
-                if (command.length == 2) {
-                    gameBuilder.append(getLookResult(command[1]));
-                    break;
-                } else
-                    gameBuilder.append(examineRoom());
+            case "q":
+                gameBuilder.append("Exiting game");
+                System.exit(0);
+                //TODO: Exit game scene without closing whole game
                 break;
-
-            case "hit":
-                System.out.println("You're hitting.");
+            case "look":
+                if (command[1] == null || command[1].isBlank() || command[1].equals("around")) {
+                    System.out.println(command[1]);
+                    gameBuilder.append(examineRoom());
+                } else {
+                    gameBuilder.append(getLookResult(command[1]));
+                }
                 break;
             case "go":
                 gameBuilder.append(headToNextRoom(command[1]));
@@ -109,19 +68,26 @@ public class GameEngine {
                 player.setLocation(currentLocation);
                 break;
             case "get":
+                if (command.length > 1) {
+                    gameBuilder.append(pickUpItem((command[1])));
+                } else {
+                    gameBuilder.append("\n \"Sorry, Dave. I can't get that.\n");
+                }
+                break;
+            case "drop":
                 if (command.length == 4) {
-                    gameBuilder.append(pickUpItem(command[1] + " " + command[2] + " " + command[3]));
+                    gameBuilder.append(dropItem(command[1] + " " + command[2] + " " + command[3]));
                     break;
                 }
                 if (command.length == 3) {
-                    gameBuilder.append(pickUpItem(command[1] + " " + command[2]));
+                    gameBuilder.append(dropItem(command[1] + " " + command[2]));
                     break;
                 }
                 if (command.length == 2) {
-                    gameBuilder.append(pickUpItem(command[1]));
+                    gameBuilder.append(dropItem(command[1]));
                     break;
                 } else {
-                    gameBuilder.append("\n \"Sorry, Dave. I can't get that.\n");
+                    gameBuilder.append("\n \"Sorry, Dave. I can't drop that.\n");
                 }
                 break;
             case "talk":
@@ -152,34 +118,48 @@ public class GameEngine {
                     gameBuilder.append("\nDave, stay focused. You can pick a fight later.");
                 }
                 break;
+            case "help":
+                gameBuilder.append(showInstructions());
+                break;
+            default:
+                gameBuilder.append("Sorry, Dave. I can\'t do that.");
+
         }
 
         //update win/lose status
         checkPlayerHealth();
         checkPuzzleComplete();
 
-        //check for lose/win status
-//            if (winStatus) {
-//                System.out.println("You have won.");
-//                break;
-//            }
-
-        gameBuilder.append("\n Your inventory contains:\n");
-        for (Item item : player.getInventory()) {
-            gameBuilder.append(item.getName());
-        }
         return gameBuilder.append(showStatus(currentLocation));
     }
 
+    private StringBuilder showInstructions() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n Commands: ")
+                .append("\n    Movement: go (north, south, east, west) \n")
+                .append("\n    Observation: look")
+                .append("\n    Get Information: talk")
+                .append("\n    Actions: get, drop, fight, heal")
+                .append("\n q to quit\n");
+        return builder;
+    }
+
     private String getLookResult(String objectToFind) {
-        String object = objectToFind.strip().toLowerCase();
-        String response = "";
+        String object;
+        if (objectToFind == null || objectToFind.equals("")) {
+            object = "around";
+        } else {
+            object = objectToFind.strip().toLowerCase();
+        }
+        String response;
         if (object.equals("around")) {
             response = "Don't look too hard now.";
         } else if (catalog.containsKey(object)) {
             response = catalog.get(object);
+        }  else if (NPC.checkCast(object)) {
+            NPC character = new NPC(objectToFind);
+            response = character.getDescription();
         } else {
-            System.out.println(catalog);
             response = "You don't see a " + object + ".";
         }
         return response + "\n";
@@ -189,9 +169,7 @@ public class GameEngine {
     public StringBuilder showStatus(String location) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n You are currently in the ")
-                .append(location).append("\n Where do you want to go?")
-                .append("\n Commands: \n Go North, \nGo South, \nGo East, \nGo West, \n")
-                .append("q to quit\n");
+                .append(location).append("\n\n");
         return builder;
     }
 
@@ -248,7 +226,17 @@ public class GameEngine {
         return "Can't go that way\n";
     }
 
-    private static String pickUpItem(String thing) {
+    private String dropItem(String playerItem) {
+        inventory.removeIf(item -> item.getName().equals(playerItem));
+        // need to replace last item in list with empty item. removal of last item results in item being displayed in inventory container.
+        if (inventory.size() <= 1) {
+            Item emptyItem = new Item("", currentLocation);
+            inventory.add(emptyItem);
+        }
+        return "You dropped the " + playerItem;
+    }
+
+    private String pickUpItem(String thing) {
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
             JSONObject current = (JSONObject) locations.get(currentLocation);

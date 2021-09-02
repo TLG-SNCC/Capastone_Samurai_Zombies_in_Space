@@ -1,10 +1,9 @@
 package com.character;
 
-import com.engine.GameEngine;
+
 import com.item.Item;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A singleton class to represent the single player in the game.
@@ -35,6 +34,22 @@ public enum Player {
      */
     public boolean checkInventory(Item item) {
         return this.inventory.contains(item);
+    }
+
+    /**
+     * Checks for any item with a String name in inventory
+     * @param name
+     * @return boolean
+     */
+    public boolean checkInventoryName(String name) {
+        boolean returnVal = false;
+        for (Item item : getInventory()) {
+            if (name.equals(item.getName())) {
+                returnVal = true;
+                break;
+            }
+        }
+        return returnVal;
     }
 
     /**
