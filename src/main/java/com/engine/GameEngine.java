@@ -19,10 +19,12 @@ import java.util.List;
 
 public class GameEngine {
 
-    static String currentLocation = "Landing Dock";
-    static Player player;
+    private String currentLocation = "Landing Dock";
+    private final Player player = Player.PLAYER;
+
     public StringBuilder status = showStatus(currentLocation);
-    public List<Item> inventory = Player.PLAYER.getInventory();
+    public List<Item> inventory;
+
 
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
@@ -33,16 +35,14 @@ public class GameEngine {
     //Create a bar room
     HashMap<String, String> bar = new HashMap<>();
 
-    public GameEngine() {
-        // Set up Player
-        player = Player.PLAYER;
-
-        // Get Items into Catalog
-        catalog = Item.readAll();
-    }
-
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = new StringBuilder();
+        inventory = player.getInventory();
+
+        // Start loop
+//        boolean winStatus = false;
+//        boolean loseStatus = false;
+        // while (!winStatus && !loseStatus) {
 
         String[] command;
         command = Parser.parseInput(input);
@@ -72,6 +72,22 @@ public class GameEngine {
                     gameBuilder.append(pickUpItem((command[1])));
                 } else {
                     gameBuilder.append("\n \"Sorry, Dave. I can't get that.\n");
+                }
+                break;
+            case "drop":
+                if (command.length == 4) {
+                    gameBuilder.append(dropItem(command[1] + " " + command[2] + " " + command[3]));
+                    break;
+                }
+                if (command.length == 3) {
+                    gameBuilder.append(dropItem(command[1] + " " + command[2]));
+                    break;
+                }
+                if (command.length == 2) {
+                    gameBuilder.append(dropItem(command[1]));
+                    break;
+                } else {
+                    gameBuilder.append("\n \"Sorry, Dave. I can't drop that.\n");
                 }
                 break;
             case "talk":
@@ -210,7 +226,17 @@ public class GameEngine {
         return "Can't go that way\n";
     }
 
-    private static String pickUpItem(String thing) {
+    private String dropItem(String playerItem) {
+        inventory.removeIf(item -> item.getName().equals(playerItem));
+        // need to replace last item in list with empty item. removal of last item results in item being displayed in inventory container.
+        if (inventory.size() <= 1) {
+            Item emptyItem = new Item("", currentLocation);
+            inventory.add(emptyItem);
+        }
+        return "You dropped the " + playerItem;
+    }
+
+    private String pickUpItem(String thing) {
         try {
             JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
             JSONObject current = (JSONObject) locations.get(currentLocation);
