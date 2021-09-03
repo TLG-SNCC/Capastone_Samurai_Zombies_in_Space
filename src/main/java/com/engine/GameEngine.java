@@ -89,25 +89,15 @@ public class GameEngine {
                 NPC character = new NPC(command[1]);
                 gameBuilder.append(character.getDialogue());
                 break;
-            case "heal":
-                if (currentLocation.contains("Medical Bay")) {
-                    if (player.getHealth() >= 30) {
-                        gameBuilder.append("\nYou're at max health.");
-                    } else {
-                        player.setHealth(player.getHealth() + 5);
-                        gameBuilder.append("\nYour current health is: " + player.getHealth() + "HP. ");
-                    }
-                } else {
-                    gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
-                }
-                break;
             case "use":
                 if (command.length == 2) {
-//                    healPlayer(command[1] + " " + command[2]);
                     if (command[1].equals("health kit") && player.checkInventoryName("health kit")) {
                         gameBuilder.append(healPlayer());
+                    }
+                    else if (command[1].equals("lever") && player.checkInventoryName("lever")){
+                        gameBuilder.append("What should I use this on?");
                     } else {
-                        gameBuilder.append("You need a Health Kit in order to heal.");
+                        gameBuilder.append("You can't do that Dave.");
                     }
                 }
                 break;
