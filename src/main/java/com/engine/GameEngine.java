@@ -106,6 +106,14 @@ public class GameEngine {
                     gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
                 }
                 break;
+            case "use":
+                if (command.length == 2){
+//                    healPlayer(command[1] + " " + command[2]);
+                    if (command[1].equals("health kit")){
+                        healPlayer();
+                    }
+                }
+                break;
             case "fight":
                 if (currentLocation.contains("Bar")) {
                     zombie.takeDamage(zombie.attack());
@@ -234,6 +242,12 @@ public class GameEngine {
             inventory.add(emptyItem);
         }
         return "You dropped the " + playerItem;
+    }
+
+    private void healPlayer() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Healing");
+        System.out.println("Healing");
     }
 
     private String pickUpItem(String thing) {
