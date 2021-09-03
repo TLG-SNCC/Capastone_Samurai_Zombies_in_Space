@@ -108,7 +108,6 @@ public class GameEngine {
                 break;
             case "fight":
                 System.out.println(command[1].equals("zombie"));
-                System.out.println(checkForZombies());
                 if (checkForZombies() && (command.length == 1  || command[1].equals("zombie"))) {
                     Zombie zombie = new Zombie(6, currentLocation);
                     player.setFightingZombie(true);
@@ -220,6 +219,8 @@ public class GameEngine {
 
     public StringBuilder showStatus(String location) {
         StringBuilder builder = new StringBuilder();
+        System.out.println(player.getAreasVisited());
+        System.out.println("Zombies currently following you: " + player.getZombiesFollowing());
         builder.append("\n You are currently in the ")
                 .append(location).append("\n\n");
         return builder;
@@ -254,6 +255,10 @@ public class GameEngine {
         try {
             JSONObject current = getJsonObject();
             String next = (String) current.get(direction);
+            if (current.containsKey("enemy") && !player.checkAreasVisited(currentLocation)) {
+                player.addZombiesFollowing();
+                player.addAreasVisited(currentLocation);
+            }
             if (current.containsKey(direction)) {
                 currentLocation = next;
                 return "You moved " + direction;
@@ -300,4 +305,7 @@ public class GameEngine {
         }
         return thing + " doesn't exist\n";
     }
+
+
+
 }
