@@ -1,6 +1,5 @@
 package com.engine;
 
-
 import com.character.NPC;
 import com.character.Player;
 import com.character.Zombie;
@@ -10,10 +9,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,12 +22,10 @@ public class GameEngine {
     public StringBuilder status = showStatus(currentLocation);
     public List<Item> inventory;
 
-
     //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
     HashMap<String, String> catalog = new HashMap<>();
     static JSONParser parser = new JSONParser();
-    Zombie zombie = new Zombie(30, "Bar");
 
     //Create a bar room
     HashMap<String, String> bar = new HashMap<>();
@@ -94,24 +89,25 @@ public class GameEngine {
                 NPC character = new NPC(command[1]);
                 gameBuilder.append(character.getDialogue());
                 break;
-            case "heal":
-                if (currentLocation.contains("Medical Bay")) {
-                    if (player.getHealth() >= 30) {
-                        gameBuilder.append("\nYou're at max health.");
-                    } else {
-                        player.setHealth(player.getHealth() + 5);
-                        gameBuilder.append("\nYour current health is: " + player.getHealth() + "HP. ");
+            case "use":
+                if (command.length == 2) {
+                    if (command[1].equals("health kit") && player.checkInventoryName("health kit")) {
+                        gameBuilder.append(healPlayer());
                     }
-                } else {
-                    gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
+                    else if (command[1].equals("lever") && player.checkInventoryName("lever")){
+                        gameBuilder.append("What should I use this on?");
+                    } else {
+                        gameBuilder.append("You can't do that Dave.");
+                    }
                 }
                 break;
             case "fight":
                 System.out.println(command[1].equals("zombie"));
-                if (checkForZombies() && (command.length == 1  || command[1].equals("zombie"))) {
+                System.out.println(checkForZombies());
+                if (checkForZombies() && (command.length == 1 || command[1].equals("zombie"))) {
                     Zombie zombie = new Zombie(6, currentLocation);
                     player.setFightingZombie(true);
-                    while (player.getFightingZombie()){
+                    while (player.getFightingZombie()) {
                         gameBuilder.append(fightLoop(zombie));
                     }
                 } else {
@@ -133,11 +129,11 @@ public class GameEngine {
         return gameBuilder.append(showStatus(currentLocation));
     }
 
-    private Boolean checkForZombies(){
+    private Boolean checkForZombies() {
         try {
             JSONObject current = getJsonObject();
             String zombie = (String) current.get("enemy");
-            if (zombie.equals("Zombie")){
+            if (zombie.equals("Zombie")) {
                 return true;
             }
         } catch (NullPointerException e) {
@@ -146,14 +142,14 @@ public class GameEngine {
         return false;
     }
 
-    private StringBuilder fightLoop(Zombie zombie){
+    private StringBuilder fightLoop(Zombie zombie) {
         StringBuilder gameBuilder = new StringBuilder();
 
         Item zombieKatana = new Item("zombie katana", "Central Hub");
         gameBuilder.append("\nYou're attacking the zombie.");
 
-        if (currentLocation.contains("Landing Dock")){
-            gameBuilder.append("\nPlayer: " + player.getHealth() + "HP. Zombie: " + zombie.getHealth()+ "HP.");
+        if (currentLocation.contains("Landing Dock")) {
+            gameBuilder.append("\nPlayer: " + player.getHealth() + "HP. Zombie: " + zombie.getHealth() + "HP.");
 
             if (player.getHealth() > 0 && player.checkInventory(zombieKatana)) {
                 zombie.takeDamage(zombie.attack() * 2);
@@ -170,8 +166,8 @@ public class GameEngine {
             }
 
 
-            if (player.getHealth() <= 0 || zombie.getHealth() <= 0){
-                if (player.getHealth() > 0){
+            if (player.getHealth() <= 0 || zombie.getHealth() <= 0) {
+                if (player.getHealth() > 0) {
                     gameBuilder.append("\nYou managed to kill the Zomburai!\n");
                     player.setFightingZombie(false);
                 } else {
@@ -184,6 +180,7 @@ public class GameEngine {
         }
         return gameBuilder;
     }
+
     private StringBuilder showInstructions() {
         StringBuilder builder = new StringBuilder();
         builder.append("\n Commands: ")
@@ -207,7 +204,7 @@ public class GameEngine {
             response = "Don't look too hard now.";
         } else if (catalog.containsKey(object)) {
             response = catalog.get(object);
-        }  else if (NPC.checkCast(object)) {
+        } else if (NPC.checkCast(object)) {
             NPC character = new NPC(objectToFind);
             response = character.getDescription();
         } else {
@@ -271,7 +268,7 @@ public class GameEngine {
 
     private JSONObject getJsonObject() {
         JSONObject locations = new JSONObject();
-        try{
+        try {
             locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
 
         } catch (IOException | ParseException e) {
@@ -290,6 +287,18 @@ public class GameEngine {
         return "You dropped the " + playerItem;
     }
 
+    private String healPlayer() {
+        String response = "";
+        StringBuilder builder = new StringBuilder();
+        if (player.getHealth() >= 30) {
+            response = "\nYou're at max health.";
+        } else {
+            player.setHealth(player.getHealth() + 5);
+            response = "\nYour current health is: " + player.getHealth() + "HP. ";
+        }
+        return response;
+    }
+
     private String pickUpItem(String thing) {
         try {
             JSONObject current = getJsonObject();
@@ -305,7 +314,4 @@ public class GameEngine {
         }
         return thing + " doesn't exist\n";
     }
-
-
-
 }
