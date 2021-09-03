@@ -23,6 +23,8 @@ out/
 .idea/*
 lib/
 
+.idea/vcs.xml
+
 Samurai.iml
 Samurai-Zombies-In-Space.iml
 
