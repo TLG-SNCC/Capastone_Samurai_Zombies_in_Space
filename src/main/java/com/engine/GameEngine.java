@@ -16,10 +16,10 @@ import java.util.List;
 
 public class GameEngine {
 
-    private String currentLocation = "Landing Dock";
+    public String currentLocation = "Landing Dock";
     private final Player player = Player.PLAYER;
 
-    public StringBuilder status = showStatus(currentLocation);
+    //public StringBuilder status = showStatus(currentLocation);
     public List<Item> inventory;
 
     //NPC NPCs;
@@ -126,7 +126,7 @@ public class GameEngine {
         checkPlayerHealth();
         checkPuzzleComplete();
 
-        return gameBuilder.append(showStatus(currentLocation));
+        return gameBuilder;
     }
 
     private Boolean checkForZombies() {
@@ -252,7 +252,7 @@ public class GameEngine {
             String next = (String) current.get(direction);
             if (current.containsKey(direction)) {
                 currentLocation = next;
-                return "You moved " + direction;
+                return "You moved " + direction + "\n";
             }
         } catch (NullPointerException e) {
             System.out.println("Can't go that way\n");
