@@ -87,7 +87,6 @@ public class GameSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             introStoryToTextarea();
-            appendInputToStoryTextarea(String.valueOf(gameEngine.status));
 
         } catch (IOException e) {
             e.printStackTrace();
