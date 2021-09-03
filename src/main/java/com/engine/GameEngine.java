@@ -247,7 +247,7 @@ public class GameEngine {
     private void healPlayer() {
         StringBuilder builder = new StringBuilder();
         builder.append("Healing");
-        Item healthKit = new Item("Health Kit", "Medical Bay");
+        Item healthKit = new Item("Health Pack", "Medical Bay");
         if (player.getInventory().contains(healthKit)) {
             System.out.println("Healing");
         } else {
