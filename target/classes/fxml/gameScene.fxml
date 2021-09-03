@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -18,16 +17,20 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: black;">
                            <children>
-                              <TextArea fx:id="storyTextArea" editable="false" prefHeight="641.0" prefWidth="632.0" scrollTop="100.0" style="-fx-control-inner-background: black; -fx-text-fill: green;" wrapText="true">
+                              <TextArea fx:id="storyTextArea" editable="false" layoutY="74.0" prefHeight="567.0" prefWidth="632.0" scrollTop="100.0" style="-fx-control-inner-background: black; -fx-text-fill: green;" wrapText="true">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
                               </TextArea>
-                              <ScrollBar fx:id="scrollbar" layoutX="608.0" max="10000.0" orientation="VERTICAL" prefHeight="641.0" prefWidth="26.0" />
+                              <Label fx:id="currentLocation" prefHeight="66.0" prefWidth="632.0" text="Current Room: Landing Dock" textFill="#26b509">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
                            </children></AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: black;">
                            <children>
-                              <TextArea fx:id="inventory" editable="false" wrapText="true" layoutY="58.0" prefHeight="583.0" prefWidth="158.0" style="-fx-control-inner-background: black; -fx-text-fill: green;">
+                              <TextArea fx:id="inventory" editable="false" layoutY="58.0" prefHeight="583.0" prefWidth="158.0" style="-fx-control-inner-background: black; -fx-text-fill: green;" wrapText="true">
                                  <font>
                                     <Font size="16.0" />
                                  </font>

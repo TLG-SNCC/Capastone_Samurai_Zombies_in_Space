@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GameEngine {
 
-    private String currentLocation = "Landing Dock";
+    public String currentLocation = "Landing Dock";
     private final Player player = Player.PLAYER;
 
     public StringBuilder status = showStatus(currentLocation);
