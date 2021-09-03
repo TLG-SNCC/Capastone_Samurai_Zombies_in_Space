@@ -5,6 +5,7 @@
     "east": "Repair Workshop",
     "south": "Ship",
     "NPC": "guard",
+    "enemy": "Zombie",
     "Description": "You're located in the Landing Dock. To the west you notice an escape dock littered with debris. To the East you find a beat up repair shop, advertising \"Their low prices are to die for\". South of you, you'll find your ship. There's some smoke coming out of the FTL engine. You curse the stupid space debris for damaging your craft while you search for a repair, but you're surprised when you see a guard hiding behind some debris."
   },
   "Repair Workshop": {
