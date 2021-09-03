@@ -17,6 +17,7 @@ public enum Player {
     List<Item> inventory;
     Integer health;
     String location;  // until the locations are implemented
+    boolean fightingZombie;
 
     /**
      * Constructor
@@ -25,6 +26,7 @@ public enum Player {
         this.inventory = new ArrayList<>();
         this.health = 20;
         this.location = "Loading Dock";
+        this.fightingZombie = false;
     }
 
     /**
@@ -126,6 +128,14 @@ public enum Player {
      */
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setFightingZombie(boolean fighting){
+        this.fightingZombie = fighting;
+    }
+
+    public boolean getFightingZombie() {
+        return fightingZombie;
     }
 
     public int attack(){
