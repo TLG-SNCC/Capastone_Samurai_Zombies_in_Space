@@ -136,18 +136,11 @@ public class GameEngine {
 
     private Boolean checkForZombies(){
         try {
-            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
-            JSONObject current = (JSONObject) locations.get(currentLocation);
+            JSONObject current = getJsonObject();
             String zombie = (String) current.get("enemy");
             if (zombie.equals("Zombie")){
                 return true;
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         } catch (NullPointerException e) {
             System.out.println("No zombies in " + currentLocation);
         }
@@ -248,16 +241,9 @@ public class GameEngine {
     private String examineRoom() {
         String description = "";
         try {
-            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
-            JSONObject current = (JSONObject) locations.get(currentLocation);
+            JSONObject current = getJsonObject();
             description = (String) current.get("Description");
             return description + "\n";
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -266,23 +252,27 @@ public class GameEngine {
 
     private String headToNextRoom(String direction) {
         try {
-            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
-            JSONObject current = (JSONObject) locations.get(currentLocation);
+            JSONObject current = getJsonObject();
             String next = (String) current.get(direction);
             if (current.containsKey(direction)) {
                 currentLocation = next;
                 return "You moved " + direction;
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         } catch (NullPointerException e) {
             System.out.println("Can't go that way\n");
         }
         return "Can't go that way\n";
+    }
+
+    private JSONObject getJsonObject() {
+        JSONObject locations = new JSONObject();
+        try{
+            locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return (JSONObject) locations.get(currentLocation);
     }
 
     private String dropItem(String playerItem) {
@@ -297,8 +287,7 @@ public class GameEngine {
 
     private String pickUpItem(String thing) {
         try {
-            JSONObject locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
-            JSONObject current = (JSONObject) locations.get(currentLocation);
+            JSONObject current = getJsonObject();
             JSONArray itemsInRoom = (JSONArray) current.get("Item");
 
             if (itemsInRoom.contains(thing)) {
@@ -306,12 +295,6 @@ public class GameEngine {
                 player.addToInventory(itemToGet);
                 return "Placed " + thing + " in your inventory\n";
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         } catch (NullPointerException e) {
             return "Item doesn't exist\n";
         }
