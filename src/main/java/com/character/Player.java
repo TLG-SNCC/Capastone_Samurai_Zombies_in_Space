@@ -94,6 +94,9 @@ public enum Player {
      * @return boolean
      */
     public boolean addToInventory(Item item) {
+        if (item == null) {
+            return false;
+        }
         this.inventory.add(item);
         return true;
     }
