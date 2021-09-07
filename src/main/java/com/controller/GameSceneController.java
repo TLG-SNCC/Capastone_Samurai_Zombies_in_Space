@@ -6,6 +6,7 @@ import com.item.Item;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -28,6 +29,9 @@ public class GameSceneController implements Initializable {
     @FXML
     private TextField inputTextField;
 
+    @FXML
+    private Label currentLocation;
+
 
     private final GameEngine gameEngine = new GameEngine();
 
@@ -48,9 +52,14 @@ public class GameSceneController implements Initializable {
                 storyTextArea.appendText(" > " + inputTextFieldString() + "\n");
                 storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
                 getPlayerInventory();
+                getPlayerCurrentLocation();
                 getInputTextField().clear();
             }
         });
+    }
+
+    private void getPlayerCurrentLocation() {
+        currentLocation.setText(String.valueOf("Current Room: " + gameEngine.currentLocation));
     }
 
     private void getPlayerInventory() {
@@ -78,7 +87,6 @@ public class GameSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             introStoryToTextarea();
-            appendInputToStoryTextarea(String.valueOf(gameEngine.status));
 
         } catch (IOException e) {
             e.printStackTrace();

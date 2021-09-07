@@ -18,6 +18,8 @@ public enum Player {
     Integer health;
     String location;  // until the locations are implemented
     boolean fightingZombie;
+    Integer zombiesFollowing;
+    List<String> areasVisited;
 
     /**
      * Constructor
@@ -25,8 +27,10 @@ public enum Player {
     Player() {
         this.inventory = new ArrayList<>();
         this.health = 20;
-        this.location = "Loading Dock";
+        this.location = "Landing Dock";
         this.fightingZombie = false;
+        this.zombiesFollowing = 0;
+        this.areasVisited = new ArrayList<>();
     }
 
     /**
@@ -52,6 +56,28 @@ public enum Player {
             }
         }
         return returnVal;
+    }
+
+    public boolean checkAreasVisited(String location){
+        boolean returnVal = false;
+        for (String area : getAreasVisited()) {
+            if (area.equals(location)) {
+                returnVal = true;
+                break;
+            }
+        }
+        return returnVal;
+    }
+
+    public List<String> getAreasVisited() {
+        return areasVisited;
+    }
+
+    public boolean addAreasVisited(String location) {
+        if (!checkAreasVisited(location)) {
+            this.areasVisited.add(location);
+        }
+        return false;
     }
 
     /**
@@ -147,6 +173,14 @@ public enum Player {
 
     public int attack(){
         return (int) (Math.random() * 5) + 1;
+    }
+
+    public Integer getZombiesFollowing() {
+        return zombiesFollowing;
+    }
+
+    public void addZombiesFollowing() {
+        this.zombiesFollowing = zombiesFollowing += 1;
     }
 
     public void takeDamage(int damageTaken){

@@ -1,6 +1,5 @@
 package com.engine;
 
-
 import com.character.NPC;
 import com.character.Player;
 import com.character.Zombie;
@@ -12,20 +11,20 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class GameEngine {
 
-    private String currentLocation = "Landing Dock";
+    public String currentLocation = "Landing Dock";
     private final Player player = Player.PLAYER;
 
-    public StringBuilder status = showStatus(currentLocation);
+    //public StringBuilder status = showStatus(currentLocation);
     public List<Item> inventory;
-
 
     //NPC zombies; ?? later for tracking how many are alive and where?
     HashMap<String, Item> catalog = Item.readAll();
     static JSONParser parser = new JSONParser();
-    Zombie zombie = new Zombie(30, "Bar");
 
     //Create a bar room
     HashMap<String, String> bar = new HashMap<>();
@@ -71,25 +70,25 @@ public class GameEngine {
                 NPC character = new NPC(command[1]);
                 gameBuilder.append(character.getDialogue());
                 break;
-            case "heal":
-                if (currentLocation.contains("Medical Bay")) {
-                    if (player.getHealth() >= 30) {
-                        gameBuilder.append("\nYou're at max health.");
-                    } else {
-                        player.setHealth(player.getHealth() + 5);
-                        gameBuilder.append("\nYour current health is: " + player.getHealth() + "HP. ");
+            case "use":
+                if (command.length == 2) {
+                    if (command[1].equals("health kit") && player.checkInventoryName("health kit")) {
+                        gameBuilder.append(healPlayer());
                     }
-                } else {
-                    gameBuilder.append("\nSorry, Dave. You must be in the Medical Bay to heal.");
+                    else if (command[1].equals("lever") && player.checkInventoryName("lever")){
+                        gameBuilder.append("What should I use this on?");
+                    } else {
+                        gameBuilder.append("You can't do that Dave.");
+                    }
                 }
                 break;
             case "fight":
                 System.out.println(command[1].equals("zombie"));
                 System.out.println(checkForZombies());
-                if (checkForZombies() && (command.length == 1  || command[1].equals("zombie"))) {
+                if (checkForZombies() && (command.length == 1 || command[1].equals("zombie"))) {
                     Zombie zombie = new Zombie(6, currentLocation);
                     player.setFightingZombie(true);
-                    while (player.getFightingZombie()){
+                    while (player.getFightingZombie()) {
                         gameBuilder.append(fightLoop(zombie));
                     }
                 } else {
@@ -114,16 +113,14 @@ public class GameEngine {
         checkPlayerHealth();
         checkPuzzleComplete();
 
-        System.out.println(String.join(Arrays.toString(player.getInventory().toArray())));
-
         return gameBuilder.append(showStatus(currentLocation));
     }
 
-    private Boolean checkForZombies(){
+    private Boolean checkForZombies() {
         try {
             JSONObject current = getJsonObject();
             String zombie = (String) current.get("enemy");
-            if (zombie.equals("Zombie")){
+            if (zombie.equals("Zombie")) {
                 return true;
             }
         } catch (NullPointerException e) {
@@ -132,14 +129,14 @@ public class GameEngine {
         return false;
     }
 
-    private StringBuilder fightLoop(Zombie zombie){
+    private StringBuilder fightLoop(Zombie zombie) {
         StringBuilder gameBuilder = new StringBuilder();
 
         Item zombieKatana = new Item("zombie katana", "Central Hub");
         gameBuilder.append("\nYou're attacking the zombie.");
 
-        if (currentLocation.contains("Landing Dock")){
-            gameBuilder.append("\nPlayer: " + player.getHealth() + "HP. Zombie: " + zombie.getHealth()+ "HP.");
+        if (currentLocation.contains("Landing Dock")) {
+            gameBuilder.append("\nPlayer: " + player.getHealth() + "HP. Zombie: " + zombie.getHealth() + "HP.");
 
             if (player.getHealth() > 0 && player.checkInventory(zombieKatana)) {
                 zombie.takeDamage(zombie.attack() * 2);
@@ -156,8 +153,8 @@ public class GameEngine {
             }
 
 
-            if (player.getHealth() <= 0 || zombie.getHealth() <= 0){
-                if (player.getHealth() > 0){
+            if (player.getHealth() <= 0 || zombie.getHealth() <= 0) {
+                if (player.getHealth() > 0) {
                     gameBuilder.append("\nYou managed to kill the Zomburai!\n");
                     player.setFightingZombie(false);
                 } else {
@@ -170,6 +167,7 @@ public class GameEngine {
         }
         return gameBuilder;
     }
+
     private StringBuilder showInstructions() {
         StringBuilder builder = new StringBuilder();
         builder.append("\n Commands: ")
@@ -205,6 +203,8 @@ public class GameEngine {
 
     public StringBuilder showStatus(String location) {
         StringBuilder builder = new StringBuilder();
+        System.out.println(player.getAreasVisited());
+        System.out.println("Zombies currently following you: " + player.getZombiesFollowing());
         builder.append("\n You are currently in the ")
                 .append(location).append("\n\n");
         return builder;
@@ -246,20 +246,20 @@ public class GameEngine {
             description = (String) current.get("Description");
             List<Item> items = new ArrayList<>();
             for (Map.Entry<String, Item> item : catalog.entrySet()) {
-                if (item.getValue().equals(currentLocation)) {
+                if (item.getValue().getLocation().equals(currentLocation)) {
                     items.add(item.getValue());
                 }
             }
             if (items.size() > 0) {
-                description += "Items in room: [";
+                description += "\nItems in room: [";
                 for (Item item : items) {
                     description += " " + item.getName() + " ";
                 }
                 description += "]\n";
             } else {
-                description += "Ruh roh. No items here!";
+                description += "\nRuh roh. No items here!";
             }
-            return description + "]\n";
+            return description + "\n";
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -270,9 +270,13 @@ public class GameEngine {
         try {
             JSONObject current = getJsonObject();
             String next = (String) current.get(direction);
+            if (current.containsKey("enemy") && !player.checkAreasVisited(currentLocation)) {
+                player.addZombiesFollowing();
+                player.addAreasVisited(currentLocation);
+            }
             if (current.containsKey(direction)) {
                 currentLocation = next;
-                return "You moved " + direction;
+                return "You moved " + direction + "\n";
             }
         } catch (NullPointerException e) {
             System.out.println("Can't go that way\n");
@@ -282,7 +286,7 @@ public class GameEngine {
 
     private JSONObject getJsonObject() {
         JSONObject locations = new JSONObject();
-        try{
+        try {
             locations = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
 
         } catch (IOException | ParseException e) {
@@ -309,6 +313,18 @@ public class GameEngine {
         }
 
         return "You dropped the " + playerItem + " in the " + currentLocation;
+    }
+
+    private String healPlayer() {
+        String response = "";
+        StringBuilder builder = new StringBuilder();
+        if (player.getHealth() >= 30) {
+            response = "\nYou're at max health.";
+        } else {
+            player.setHealth(player.getHealth() + 5);
+            response = "\nYour current health is: " + player.getHealth() + "HP. ";
+        }
+        return response;
     }
 
     private String pickUpItem(String thing) {
