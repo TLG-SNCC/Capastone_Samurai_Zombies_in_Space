@@ -68,11 +68,8 @@ public enum Player {
      * @return boolean
      */
     public boolean addToInventory(Item item) {
-        if (item.getLocation().equals(getLocation())) {
-            this.inventory.add(item);
-            return true;
-        }
-        return false;
+        this.inventory.add(item);
+        return true;
     }
 
     // for testing, mostly
@@ -88,6 +85,16 @@ public enum Player {
     public String removeInventory(Item item) {
         this.inventory.remove(item);
         return item.getLocation();
+    }
+
+    public boolean removeInventory(String itemName) {
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getName().equals(itemName)) {
+                inventory.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

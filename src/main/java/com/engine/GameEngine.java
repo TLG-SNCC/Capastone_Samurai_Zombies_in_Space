@@ -5,17 +5,13 @@ import com.character.NPC;
 import com.character.Player;
 import com.character.Zombie;
 import com.item.Item;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class GameEngine {
 
@@ -26,9 +22,8 @@ public class GameEngine {
     public List<Item> inventory;
 
 
-    //NPC NPCs;
     //NPC zombies; ?? later for tracking how many are alive and where?
-    HashMap<String, String> catalog = new HashMap<>();
+    HashMap<String, Item> catalog = Item.readAll();
     static JSONParser parser = new JSONParser();
     Zombie zombie = new Zombie(30, "Bar");
 
@@ -38,11 +33,6 @@ public class GameEngine {
     public StringBuilder runGameLoop(String input) {
         StringBuilder gameBuilder = new StringBuilder();
         inventory = player.getInventory();
-
-        // Start loop
-//        boolean winStatus = false;
-//        boolean loseStatus = false;
-        // while (!winStatus && !loseStatus) {
 
         String[] command;
         command = Parser.parseInput(input);
@@ -75,21 +65,8 @@ public class GameEngine {
                 }
                 break;
             case "drop":
-                if (command.length == 4) {
-                    gameBuilder.append(dropItem(command[1] + " " + command[2] + " " + command[3]));
-                    break;
-                }
-                if (command.length == 3) {
-                    gameBuilder.append(dropItem(command[1] + " " + command[2]));
-                    break;
-                }
-                if (command.length == 2) {
-                    gameBuilder.append(dropItem(command[1]));
-                    break;
-                } else {
-                    gameBuilder.append("\n \"Sorry, Dave. I can't drop that.\n");
-                }
-                break;
+               gameBuilder.append(dropItem(command[1]));
+               break;
             case "talk":
                 NPC character = new NPC(command[1]);
                 gameBuilder.append(character.getDialogue());
@@ -122,6 +99,12 @@ public class GameEngine {
             case "help":
                 gameBuilder.append(showInstructions());
                 break;
+            case "catalog":
+                gameBuilder.append(reviewCatalog());
+                break;
+            case "inventory":
+                gameBuilder.append(reviewInventory());
+                break;
             default:
                 gameBuilder.append("Sorry, Dave. I can\'t do that.");
 
@@ -130,6 +113,8 @@ public class GameEngine {
         //update win/lose status
         checkPlayerHealth();
         checkPuzzleComplete();
+
+        System.out.println(String.join(Arrays.toString(player.getInventory().toArray())));
 
         return gameBuilder.append(showStatus(currentLocation));
     }
@@ -207,7 +192,7 @@ public class GameEngine {
         if (object.equals("around")) {
             response = "Don't look too hard now.";
         } else if (catalog.containsKey(object)) {
-            response = catalog.get(object);
+            response = catalog.get(object).getDescription();
         }  else if (NPC.checkCast(object)) {
             NPC character = new NPC(objectToFind);
             response = character.getDescription();
@@ -238,16 +223,47 @@ public class GameEngine {
         return input.toLowerCase().split("[\\s]+");
     }
 
+    private String reviewCatalog() {
+        String returnVal = " Items : [";
+        for (Map.Entry<String, Item> item : catalog.entrySet()) {
+            returnVal += item.getValue().getName() + " (in " + item.getValue().getLocation() + ") ";
+        }
+        return returnVal;
+    }
+
+    private String reviewInventory() {
+        String returnVal = " Items : [";
+        for (Item item : player.getInventory()) {
+            returnVal += item.getName() + " (in " + item.getLocation() + ") ";
+        }
+        return returnVal;
+    }
+
     private String examineRoom() {
         String description = "";
         try {
             JSONObject current = getJsonObject();
             description = (String) current.get("Description");
-            return description + "\n";
+            List<Item> items = new ArrayList<>();
+            for (Map.Entry<String, Item> item : catalog.entrySet()) {
+                if (item.getValue().equals(currentLocation)) {
+                    items.add(item.getValue());
+                }
+            }
+            if (items.size() > 0) {
+                description += "Items in room: [";
+                for (Item item : items) {
+                    description += " " + item.getName() + " ";
+                }
+                description += "]\n";
+            } else {
+                description += "Ruh roh. No items here!";
+            }
+            return description + "]\n";
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        return description + "\n";
+        return description + "]\n";
     }
 
     private String headToNextRoom(String direction) {
@@ -276,27 +292,34 @@ public class GameEngine {
     }
 
     private String dropItem(String playerItem) {
-        inventory.removeIf(item -> item.getName().equals(playerItem));
+        if (!player.checkInventoryName(playerItem)) {
+            return "You can't drop what you don't have, Dave.";
+        }
+
+        //inventory.removeIf(item -> item.getName().equals(playerItem));
+        catalog.replace(playerItem, new Item(playerItem, currentLocation)); //relocate the item
+        player.removeInventory(playerItem);
+
+        inventory = player.getInventory(); // refresh inventory
+
         // need to replace last item in list with empty item. removal of last item results in item being displayed in inventory container.
         if (inventory.size() <= 1) {
             Item emptyItem = new Item("", currentLocation);
             inventory.add(emptyItem);
         }
-        return "You dropped the " + playerItem;
+
+        return "You dropped the " + playerItem + " in the " + currentLocation;
     }
 
     private String pickUpItem(String thing) {
-        try {
-            JSONObject current = getJsonObject();
-            JSONArray itemsInRoom = (JSONArray) current.get("Item");
-
-            if (itemsInRoom.contains(thing)) {
-                Item itemToGet = new Item(thing, currentLocation);
-                player.addToInventory(itemToGet);
-                return "Placed " + thing + " in your inventory\n";
-            }
-        } catch (NullPointerException e) {
-            return "Item doesn't exist\n";
+        Item item = catalog.get(thing);
+        if (item != null && item.getLocation().equals(currentLocation)) {
+            item.setLocation("player");
+            player.addToInventory(item);
+            catalog.replace(thing, item);
+            return "Placed " + thing + " in your inventory\n";
+        } else if (item != null && item.getLocation().equals("player")) {
+            return "You already have the " + thing;
         }
         return thing + " doesn't exist\n";
     }
