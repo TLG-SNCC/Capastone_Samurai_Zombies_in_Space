@@ -1,10 +1,9 @@
 package com.character;
 
-import com.engine.GameEngine;
+
 import com.item.Item;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A singleton class to represent the single player in the game.
@@ -18,6 +17,9 @@ public enum Player {
     List<Item> inventory;
     Integer health;
     String location;  // until the locations are implemented
+    boolean fightingZombie;
+    Integer zombiesFollowing;
+    List<String> areasVisited;
 
     /**
      * Constructor
@@ -25,7 +27,10 @@ public enum Player {
     Player() {
         this.inventory = new ArrayList<>();
         this.health = 20;
-        this.location = "Loading Dock";
+        this.location = "Landing Dock";
+        this.fightingZombie = false;
+        this.zombiesFollowing = 0;
+        this.areasVisited = new ArrayList<>();
     }
 
     /**
@@ -35,6 +40,44 @@ public enum Player {
      */
     public boolean checkInventory(Item item) {
         return this.inventory.contains(item);
+    }
+
+    /**
+     * Checks for any item with a String name in inventory
+     * @param name
+     * @return boolean
+     */
+    public boolean checkInventoryName(String name) {
+        boolean returnVal = false;
+        for (Item item : getInventory()) {
+            if (name.equals(item.getName())) {
+                returnVal = true;
+                break;
+            }
+        }
+        return returnVal;
+    }
+
+    public boolean checkAreasVisited(String location){
+        boolean returnVal = false;
+        for (String area : getAreasVisited()) {
+            if (area.equals(location)) {
+                returnVal = true;
+                break;
+            }
+        }
+        return returnVal;
+    }
+
+    public List<String> getAreasVisited() {
+        return areasVisited;
+    }
+
+    public boolean addAreasVisited(String location) {
+        if (!checkAreasVisited(location)) {
+            this.areasVisited.add(location);
+        }
+        return false;
     }
 
     /**
@@ -51,11 +94,11 @@ public enum Player {
      * @return boolean
      */
     public boolean addToInventory(Item item) {
-        if (item.getLocation().equals(getLocation())) {
-            this.inventory.add(item);
-            return true;
+        if (item == null) {
+            return false;
         }
-        return false;
+        this.inventory.add(item);
+        return true;
     }
 
     // for testing, mostly
@@ -71,6 +114,16 @@ public enum Player {
     public String removeInventory(Item item) {
         this.inventory.remove(item);
         return item.getLocation();
+    }
+
+    public boolean removeInventory(String itemName) {
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getName().equals(itemName)) {
+                inventory.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -113,8 +166,24 @@ public enum Player {
         this.location = location;
     }
 
+    public void setFightingZombie(boolean fighting){
+        this.fightingZombie = fighting;
+    }
+
+    public boolean getFightingZombie() {
+        return fightingZombie;
+    }
+
     public int attack(){
         return (int) (Math.random() * 5) + 1;
+    }
+
+    public Integer getZombiesFollowing() {
+        return zombiesFollowing;
+    }
+
+    public void addZombiesFollowing() {
+        this.zombiesFollowing = zombiesFollowing += 1;
     }
 
     public void takeDamage(int damageTaken){

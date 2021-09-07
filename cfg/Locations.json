@@ -4,41 +4,42 @@
     "west": "Escape Shuttle",
     "east": "Repair Workshop",
     "south": "Ship",
-    "NPC": "Guard",
-    "Description": "You're located in the Landing Dock. To the west you notice an escape dock littered with debris. To the East you find a beat up repair shop, advertising \"Their low prices are to die for\". South of you, you'll find your ship. There's some smoke coming out of the FTL engine. You curse the stupid space debris for damaging your craft while you search for a repair."
+    "NPC": "guard",
+    "enemy": "Zombie",
+    "Description": "You're located in the Landing Dock. To the west you notice an escape dock littered with debris. To the East you find a beat up repair shop, advertising \"Their low prices are to die for\". South of you, you'll find your ship. There's some smoke coming out of the FTL engine. You curse the stupid space debris for damaging your craft while you search for a repair, but you're surprised when you see a guard hiding behind some debris."
   },
   "Repair Workshop": {
     "west": "Landing Dock",
-    "NPC": "Engineer",
+    "NPC": "engineer",
     "Item": ["wizzlewhat", "space wrench"],
-    "Description": "Inside the shop you see repair parts knocked over on the ground. There's blood smeared behind a counter (someone must have had a bad accident). You take a step forward and hear the sound of a tool hit the ground. You quickly glance over and see a pair of eyes behind a stack of RAD boosters."
+    "Description": "Inside the shop you see repair parts, including a wizzlewhat, knocked over on the ground. There's blood smeared behind a counter (someone must have had a bad accident). The only exit is the way you came in, back to the west. You take a step forward and hear the sound of a tool hit the ground. You quickly glance over and see a pair of eyes behind a stack of RAD boosters -- it looks like an engineer."
   },
   "Central Hub": {
     "east": "Bar",
     "west": "Medical Bay",
     "south": "Landing Dock",
     "Item": ["zombie armor", "zombie katana"],
-    "Description": "As soon as you step inside you start to slowly drift upwards. You look around and see floating tables and crates. The generator must be broken so this room isn't getting any gravity. To the east you find a bright flickering neon light that reads \"Jill's Cantina\"."
+    "Description": "As soon as you step inside you start to slowly drift upwards. You look around and see floating tables and crates. The generator must be broken so this room isn't getting any gravity. To the east you find a bright flickering neon light that reads \"Jill's Cantina\". There are also exits to the west and south. What appears to be a beheaded Samurai Zombie is floating nearby."
   },
   "Bar": {
     "west": "Central Hub",
-    "NPC": "Bartender",
+    "NPC": "bartender",
     "Item": ["swiss army knife"],
-    "Description": "There's space music playing on the jukebox. The tables near the exit are stacked on each other, some broken cleanly in half. Grabbing a drink from the bar doesn't sound like a bad idea."
+    "Description": "There's space music playing on the jukebox. The tables near the western exit are stacked on each other, some broken cleanly in half. Grabbing a drink from the bar doesn't sound like a bad idea. You nod to the bartender."
   },
   "Medical Bay": {
     "east": "Central Hub",
-    "NPC": "Visitor",
+    "NPC": "visitor",
     "Item": ["health kit", "lever"],
-    "Description": "The smell of iron fills the room. The walls are painted red and there's a few bodies laying on the ground. There are medical supply boxes on the ground and some on the shelves, all empty. There may be more to find towards the back of the room."
+    "Description": "The smell of iron fills the room. The walls are painted red and there's a few bodies lying on the ground. One is holding a lever. There are medical supply boxes on the ground and some on the shelves, all empty. There may be more to find towards the back of the room. As you head that way to investigate, you're startled by a visitor to the station who looks near death."
   },
   "Escape Shuttle": {
     "east": "Landing Dock",
     "Item": ["oxygen tank"],
-    "Description": "The area is littered with cargo boxes, rats, and wires hanging loosely from the walls."
+    "Description": "The area is littered with cargo boxes, rats, and wires hanging loosely from the walls. Only the life support systems seem to be untouched. The exit to the east is the only way out."
   },
   "Ship": {
     "north": "Landing Dock",
-    "Description": "I'm on a boat."
+    "Description": "I'm on a boat. You can go back north to the landing dock."
   }
 }

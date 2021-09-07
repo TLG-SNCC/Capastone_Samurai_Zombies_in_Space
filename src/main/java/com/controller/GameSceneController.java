@@ -1,10 +1,12 @@
 package com.controller;
 
+import com.character.Player;
 import com.engine.GameEngine;
 import com.item.Item;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -27,6 +29,9 @@ public class GameSceneController implements Initializable {
     @FXML
     private TextField inputTextField;
 
+    @FXML
+    private Label currentLocation;
+
 
     private final GameEngine gameEngine = new GameEngine();
 
@@ -35,11 +40,6 @@ public class GameSceneController implements Initializable {
 
     private TextField getInputTextField() {
         return inputTextField;
-    }
-
-    private void storyTextareaContainer() throws IOException {
-        introStoryToTextarea();
-
     }
 
     /*
@@ -51,24 +51,23 @@ public class GameSceneController implements Initializable {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
                 storyTextArea.appendText(" > " + inputTextFieldString() + "\n");
                 storyTextArea.appendText(String.valueOf(gameEngine.runGameLoop(inputTextFieldString())));
-                getInputTextField().clear();
-
-                //TODO: dynamically set inventory
                 getPlayerInventory();
+                getPlayerCurrentLocation();
+                getInputTextField().clear();
             }
         });
     }
 
+    private void getPlayerCurrentLocation() {
+        currentLocation.setText(String.valueOf("Current Room: " + gameEngine.currentLocation));
+    }
+
     private void getPlayerInventory() {
         StringBuilder playerInventory = new StringBuilder();
-        if (gameEngine.inventory != null) {
             for (Item item : gameEngine.inventory) {
                 playerInventory.append(item.getName()).append("\n");
-                inventory.appendText(String.valueOf(playerInventory));
+                inventory.setText(String.valueOf(playerInventory));
             }
-            // need to clear the old list so we dont duplicate past items when getting a new one
-            gameEngine.inventory.clear();
-        }
     }
     /*
      * initialized at start of game.
@@ -88,7 +87,6 @@ public class GameSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             introStoryToTextarea();
-            appendInputToStoryTextarea(String.valueOf(gameEngine.status));
 
         } catch (IOException e) {
             e.printStackTrace();

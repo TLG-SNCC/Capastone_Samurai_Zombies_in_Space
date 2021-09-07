@@ -2,6 +2,11 @@ package com.item;
 
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,33 +25,32 @@ public class Item {
     private String description;
 
     /**
-     * Code yanked unceremoniously from
-     * tabnine.com/code/java/methods/org.json.simple.JSONObject/entrySet
      *
      * @return catalog hashmap
      */
-    public static HashMap<String, String> readAll() {
+    public static HashMap<String, Item> readAll() {
         JSONParser parser = new JSONParser();
-        HashMap<String, String> catalog = new HashMap<>();
+        HashMap<String, Item> catalog = new HashMap<>();
         try {
-            JSONArray items = (JSONArray) parser.parse(new FileReader("cfg/Items.json"));
-            for (Object item : items) {
-                JSONObject jsonObject = (JSONObject) item;
-                for (Object jsonEntry : jsonObject.entrySet()) {
-                    Map.Entry<?, ?> entry = (Map.Entry<?, ?>) jsonEntry;
-                    catalog.put(entry.getKey().toString(), entry.getValue().toString());
+            JSONObject characterSet = (JSONObject) parser.parse(new FileReader("cfg/Locations.json"));
+            for (Object room : characterSet.keySet()) {
+                JSONObject roomObj = (JSONObject) characterSet.get(room);
+                JSONArray itemArr = (JSONArray) roomObj.get("Item");
+                if (itemArr != null) {
+                    for (Object item : itemArr) {
+                        catalog.put(item.toString(), new Item(item.toString(), room.toString()));
+                    }
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | ParseException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
-
+        System.out.println(catalog.keySet());
         return catalog;
     }
+
 
     public Item(String name, String location) {
         this.name = name;
@@ -65,7 +69,7 @@ public class Item {
         return location;
     }
 
-    private void setLocation(String location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
