@@ -41,8 +41,10 @@ public class PlayerTest {
         item1 = new Item("spork", "Loading Dock");
         item2 = new Item("shovel", "med bay");
 
-        player.addToInventory(item1);
-        player.addToInventory(item2);
+        player.setLocation("Loading Dock");
+        assertTrue(player.addToInventory(item1));
+        player.setLocation("med bay");
+        assertTrue(player.addToInventory(item2));
 
         assertTrue(player.checkInventory(item1));
         assertTrue(player.checkInventory(item2));
@@ -50,9 +52,7 @@ public class PlayerTest {
 
     @Test
     public void checkInventoryPositiveNullItem() {
-        item1 = null;
-        player.addToInventory(item1);
-        assertTrue(player.checkInventory(item1));
+        assertFalse(player.addToInventory(null));
     }
 
     @Test
@@ -83,7 +83,9 @@ public class PlayerTest {
     public void getInventoryPositiveTwoItems() {
         item1 = new Item("finger", "Loading Dock");
         item2 = new Item("spork", "med bay");
+        player.setLocation("Loading Dock");
         player.addToInventory(item1);
+        player.setLocation("med bay");
         player.addToInventory(item2);
         ArrayList<Item> inventory = new ArrayList<>();
         inventory.add(item1);
@@ -118,7 +120,9 @@ public class PlayerTest {
     public void getInventorySizeCorrectForExistingItems() {
         item1 = new Item("finger", "Loading Dock");
         item2 = new Item("spork", "med bay");
+        player.setLocation("Loading Dock");
         player.addToInventory(item1);
+        player.setLocation("med bay");
         player.addToInventory(item2);
         assertEquals((Integer) 2, player.getInventorySize());
     }

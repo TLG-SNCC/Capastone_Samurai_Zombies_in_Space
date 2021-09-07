@@ -17,7 +17,6 @@ public class Parser {
         returnValue[0] = explodedCommand[0];
 
         if (explodedCommand.length > 1) {
-            System.out.println("Removing some words, maybe");
             returnValue[1] = removeExtraWords(Arrays.copyOfRange(explodedCommand, 1, explodedCommand.length));
         }
 
